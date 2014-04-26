@@ -12,6 +12,7 @@ from app.tools.getTime import getWeekDay
 from app.tools.getTyxPc import getTyxPc
 from app.tools.setCurriculum import setCurriculum
 from app.tools.simisimi_api import simsimi, simsimi_back
+from app.tools.post_msg import postMsg
 #from tools.log import *
 from xml.etree import ElementTree as ET
 from django.http import HttpResponse
@@ -145,9 +146,10 @@ def wechatService(request):
                                 infor = getLost()
                             elif eventKey == 'OpenChatWithUser':
                                 if chatStatus == 0:
-                                    charwithuser.ChangeStatus(toUserName,1)
+                                    postMsg(toUserName,'正在为你寻找小伙伴哦~')
                                     charwithuser.OpenChat(toUserName)
-                                    infor = '正在为你寻找小伙伴哦~'
+                                    postMsg(toUserName,'已经为你找到了一位神秘的小伙伴,快和TA打个招呼吧!')
+                                    return HttpResponse('')
                                 elif chatStatus == 1:
                                     infor = '我们还在为你努力寻找中,不如先喝杯茶吧,不过你也可以点击退出取消配对哦.'
                                 elif chatStatus == 11:
@@ -283,7 +285,6 @@ def auth(request, offset):
         return render_to_response('auth.html', {
             'openId': offset,
         })
-
 
 @csrf_exempt
 def register(request):
