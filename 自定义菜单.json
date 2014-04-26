@@ -1,0 +1,79 @@
+{
+    "button": [
+        {
+            "name": "课表",
+            "sub_button": [
+                {
+                    "type": "click",
+                    "name": "更新课表",
+                    "key": "UpdateCurriculum"
+                },
+                {
+                    "type": "click",
+                    "name": "明天课表",
+                    "key": "CurriculumTomorrow"
+                },
+                {
+                    "type": "click",
+                    "name": "今天课表",
+                    "key": "CurriculumToday"
+                },
+                {
+                    "type": "click",
+                    "name": "下节课",
+                    "key": "CurriculumNext"
+                }
+            ]
+        },
+        {
+            "name": "小工具",
+            "sub_button": [
+                {
+                    "type": "click",
+                    "name": "更新绑定信息",
+                    "key": "Update"
+                },
+                {
+                    "type": "click",
+                    "name": "教务信息",
+                    "key": "JwcInfo"
+                },
+                {
+                    "type": "view",
+                    "name": "空闲教室",
+                    "url": "http://herald.seu.edu.cn/queryEmptyClassrooms/m/"
+                },
+                {
+                    "type": "click",
+                    "name": "图书馆借书信息",
+                    "key": "Library"
+                },
+                {
+                    "type": "click",
+                    "name": "跑操次数",
+                    "key": "TyxPc"
+                }
+            ]
+        },
+        {
+            "name":"更多...",
+            "sub_button":[
+                {
+                    "type": "click",
+                    "name": "配对",
+                    "key": "OpenChatWithUser"
+                },
+                {
+                    "type": "click",
+                    "name": "退出",
+                    "key": "ExitChatWithUser"
+                },
+                {
+                    "type": "click",
+                    "name": "关于",
+                    "key": "Instruction"
+                }
+            ]
+        }
+    ]
+}
