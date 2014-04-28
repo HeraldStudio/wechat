@@ -8,13 +8,15 @@ from ast import literal_eval
 
 # Redis里的内容
 # key           | description
-# paring_queue  | 所有的申请配对的用户，配对成功的要剔除出去
+# pairing_queue  | 所有的申请配对的用户，配对成功的要剔除出去
 # user_id       | 已配对或在申请配对的用户的信息
+
+# 默认存在数据库 0 以及 pairing_queue 这个key
 
 Config = {
     'host': 'localhost',
     'port': 6379,
-    'db': 'casual_chat'
+    'db': 0
 }
 
 # 转化从数据库获取到的空数据
@@ -26,14 +28,14 @@ def convertEmptyResult(result):
 
 # 将用户剔除出申请配对队列
 # 无返回，一般来说不会出现同步异常
-def removeFromParingQueue(user_id):
+def removeFrompairingQueue(user_id):
     db = redis.Redis(host = Config['host'], port = Config['port'], db = Config['db'])
-    paring_user_list = literal_eval(convertEmptyResult(db.get('paring_queue')))
+    pairing_user_list = literal_eval(convertEmptyResult(db.get('pairing_queue')))
     try:
-        paring_user_list.remove(user_id)
+        pairing_user_list.remove(user_id)
     except:
         pass
-    db.set('paring_queue', paring_user_list)
+    db.set('pairing_queue', pairing_user_list)
 
 # 用户申请进入聊天
 # 线程会一直执行循环查询数据库以寻找配对的用户
@@ -48,31 +50,31 @@ def openChat(user_id):
             'target': ''
         }
         db.set(user_id, value)
-        old_list = literal_eval(convertEmptyResult(db.get('paring_queue')))
+        old_list = literal_eval(convertEmptyResult(db.get('pairing_queue')))
         old_list.append(user_id)
-        db.set('paring_queue', old_list)
+        db.set('pairing_queue', old_list)
 
         # 为该用户配对
         # 有一个潜在地同步问题。。
         while True:
-            paring_user_list = literal_eval(convertEmptyResult(db.get('paring_queue')))
-            for target in paring_user_list:
+            pairing_user_list = literal_eval(convertEmptyResult(db.get('pairing_queue')))
+            for target in pairing_user_list:
                 # 检查自己的状态
                 self_value = literal_eval(convertEmptyResult(db.get(user_id)))
                 if self_value and self_value['status'] == 1:  # 确实在申请配对
                     target_value = literal_eval(convertEmptyResult(db.get(target)))
                     if not target_value:  # 已经不存在了。。
-                        removeFromParingQueue(target)
+                        removeFrompairingQueue(target)
                     elif target_value['status'] == 1:  # 对方也同样处于配对状态
                         # TODO：同步问题。假设两个用户会互相选择对方
                         # 此处暂时定为用户设置自己的target
                         self_value['status'] = 11
                         self_value['target'] = target
                         db.set(user_id, self_value) # 更新
-                        removeFromParingQueue(user_id) # 将自己移出申请配对队列
+                        removeFrompairingQueue(user_id) # 将自己移出申请配对队列
                         return 1
                 else:
-                    removeFromParingQueue(user_id) # 有可能已配对成功或不继续配对了
+                    removeFrompairingQueue(user_id) # 有可能已配对成功或不继续配对了
     except:
         delChat(user_id)
         return 0
