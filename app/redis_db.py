@@ -58,6 +58,10 @@ def openChat(user_id):
         # 有一个潜在地同步问题。。
         while True:
             pairing_user_list = literal_eval(convertEmptyResult(db.get('pairing_queue')))
+            try:
+                pairing_user_list.remove(user_id) # 去除掉自己
+            except:
+                pass
             for target in pairing_user_list:
                 # 检查自己的状态
                 self_value = literal_eval(convertEmptyResult(db.get(user_id)))
