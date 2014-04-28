@@ -1,10 +1,10 @@
 # -*- coding:utf-8 -*-
 import json
 import urllib
-
+import app_config
 
 def getJwcInfor():
-    uFile = urllib.urlopen("http://121.248.63.105/herald_web_service/jwc/info")
+    uFile = urllib.urlopen(app_config.JWC_INFO_URL)
     inforList = json.loads(uFile.read())
     infor = ''
     for i in inforList:

@@ -3,7 +3,7 @@ from app.models import UserInfo
 import json
 import urllib
 import urllib2
-
+import app_config
 
 def getLibrary(openId):
     user = UserInfo.objects.filter(openId=openId)
@@ -16,7 +16,7 @@ def getLibrary(openId):
             userpage = [('username', username), ('password', password)]
             userpage = urllib.urlencode(userpage)
             req = urllib2.Request(
-                "http://121.248.63.105/herald_web_service/library/rendered_books/", userpage)
+                app_config.LIBARY_REND_URL, userpage)
             infor = ''
             try:
                 bookList = json.loads(urllib2.urlopen(req).read())

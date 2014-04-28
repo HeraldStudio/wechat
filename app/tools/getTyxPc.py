@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 import urllib
 from app.models import UserInfo
-
+import app_config
 
 def getTyxPc(openId):
     user = UserInfo.objects.filter(openId=openId)
@@ -9,7 +9,7 @@ def getTyxPc(openId):
         cardNumber = user[0].cardNumber
         password = user[0].pcPwd
     uFile = urllib.urlopen(
-        "http://121.248.63.105/herald_web_service/tyx/%s/%s/" % (cardNumber, password))
+        app_config.PAOCAO_URL+"%s/%s/" % (cardNumber, password))
     number = uFile.read()
     if number == '一卡通/密码不正确，跑操查询初始密码为一卡通号，请仔细检查哦':
         return 'error'

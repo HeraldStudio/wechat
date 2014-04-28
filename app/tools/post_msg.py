@@ -4,11 +4,11 @@ import urllib
 import urllib2
 import json
 import time
+import app_config
 
 def getToken():
-    TOKEN_URL = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=APPID&secret=APPSECRET"
     try:
-        reqjson = json.loads(urllib.urlopen(TOKEN_URL).read())
+        reqjson = json.loads(urllib.urlopen(app_config.TOKEN_URL).read())
         return reqjson['access_token']
     except:
         return ''

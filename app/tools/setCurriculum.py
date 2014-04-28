@@ -3,13 +3,14 @@ import json
 import urllib
 from app.models import UserInfo
 from app.models import Curriculum
+import app_config
 
 def setCurriculum(openId, term='13-14-3'):
     user = UserInfo.objects.filter(openId=openId)
     if user:
         cardNumber = user[0].cardNumber
     uFile = urllib.urlopen(
-        "http://121.248.63.105/herald_web_service/curriculum/%s/%s/" % (cardNumber, term))
+        app_config.CURRICULUM_URL+"%s/%s/" % (cardNumber, term))
     curriculum = json.load(uFile)
     morning = curriculum[1][0]  # 早上
     afternoon = curriculum[1][1]  # 下午
