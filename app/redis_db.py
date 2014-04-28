@@ -123,6 +123,7 @@ def changeStatus(user_id, new_status):
             return 0
         else:
             user_value['status'] = new_status
+            db.set(user_id, user_value)
     except:
         return 0
 
