@@ -157,22 +157,26 @@ def delChat(user_id):
     except:
         return 0        
 
-# 为用户计时n秒
+# 为用户计时n毫秒
+# 超过n秒后会自动回到状态11，大概的意思就是12状态只会维持n毫秒
 def countForUser(user_id, n):
-    time.sleep(n)   
+    # # 在数据库中设置标记位
+    # user_value = literal_eval(convertEmptyResult(getVariable(user_id)))
+    # if not user_value:
+    #     user_value['cancel'] = 1
+    #     setVariable(user_id, user_value)
+    # else:
+    #     pass # exception
 
-    # 在数据库中设置标记位
-    # db = redis.Redis(host = Config['host'], port = Config['port'], db = Config['db'])
+    time.sleep(n) # 计时n毫秒
     user_value = literal_eval(convertEmptyResult(getVariable(user_id)))
-    if not user_value:
-        pass
+    if not uesr_value:
+        # 计时过程中用户退出了配对
+        pass 
     else:
-        user_value['counted'] = 1
+        # user_value['cancel'] = 0 # 超过了n毫秒，再次点击不取消
+        user_value['status'] = 11 # 间隔超过了n毫秒，回到11状态
         setVariable(user_id, user_value)
-
-# 用户是否之前点过【申请配对】按钮（在已配对的前提下）
-# 
-
 
 # 保存令牌与时间
 def saveStorageToken(token, time):
