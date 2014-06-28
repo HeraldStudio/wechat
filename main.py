@@ -5,10 +5,15 @@
 from sqlalchemy.orm import scoped_session, sessionmaker
 from mod.models.db import engine
 from mod.user.user_handler import UserHandler
+from tornado.httpclient import HTTPRequest, HTTPClient
+from mod.models.user import User
+from config import SERVICE, TERM, TIME_OUT
 import tornado.web
 import tornado.ioloop
 import tornado.httpserver
 import tornado.options
+import tornado.gen
+import urllib
 import wechat
 import json
 import os
@@ -36,28 +41,58 @@ class Application(tornado.web.Application):
 
 class WechatHandler(tornado.web.RequestHandler):
 
+    @property
+    def db(self):
+        return self.application.db
+
     def get(self):
-        wx = wechat.Message(token='herald')
-        if wx.check_signature(self.get_argument('signature', default=''),
-                              self.get_argument('timestamp', default=''),
-                              self.get_argument('nonce', default='')):
+        self.wx = wechat.Message(token='herald')
+        if self.wx.check_signature(self.get_argument('signature', default=''),
+                                   self.get_argument('timestamp', default=''),
+                                   self.get_argument('nonce', default='')):
             self.write(self.get_argument('echostr'))
         else:
             self.write('access verification fail')
 
+    @tornado.web.asynchronous
+    @tornado.gen.engine
     def post(self):
-        wx = wechat.Message(token='herald')
-        if wx.check_signature(self.get_argument('signature', default=''),
-                              self.get_argument('timestamp', default=''),
-                              self.get_argument('nonce', default='')):
-            msg = wx.parse_msg(self.request.body)
-            if wx.msg_type == 'event' and wx.envent == 'subscribe':
-                self.write(wx.response_text_msg('welcome'))
+        self.wx = wechat.Message(token='herald')
+        # self.wx.check_signature(self.get_argument('signature', default=''),
+        #                        self.get_argument('timestamp', default=''),
+        #                        self.get_argument('nonce', default='')):
+        if True:
+            msg = self.wx.parse_msg(self.request.body)
+            if self.wx.msg_type == 'event' and self.wx.event == 'subscribe':
+                self.write(self.wx.response_text_msg('welcome'))
+            elif self.wx.event_key == 'curriculum' or \
+                    self.wx.content == 'curriculum':
+                self.curriculum(self.wx.openid)
             else:
-                self.write(wx.response_text_msg(json.dumps(msg)))
+                self.write(self.wx.response_text_msg(json.dumps(msg)))
         else:
-            wx.parse_msg(self.request.body)
-            self.write(wx.response_text_msg('message processing fail'))
+            self.wx.parse_msg(self.request.body)
+            self.write(self.wx.response_text_msg('message processing fail'))
+
+        self.finish()
+
+    def curriculum(self, openid):
+        user = self.db.query(User).filter(User.openid == openid)
+        try:
+            user = self.db.query(User).filter(User.openid == openid).one()
+            client = HTTPClient()
+            params = urllib.urlencode({
+                'cardnum': user.cardnum,
+                'term': TERM
+            })
+            request = HTTPRequest(SERVICE + 'curriculum', method='POST',
+                                  body=params, request_timeout=TIME_OUT)
+            response = client.fetch(request)
+            print response.body
+            self.write(self.wx.response_text_msg(
+                json.loads(response.body)))
+        except:
+            self.write(self.wx.response_text_msg('11'))
 
 
 if __name__ == '__main__':

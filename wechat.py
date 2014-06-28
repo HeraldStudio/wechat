@@ -47,6 +47,18 @@ class Message(object):
     def event(self):
         return self.msg.get('Event', None)
 
+    @property
+    def event_key(self):
+        return self.msg.get('EventKey', None)
+
+    @property
+    def content(self):
+        return self.msg.get('Content', None)
+
+    @property
+    def openid(self):
+        return self.msg.get('FromUserName', None)
+
     def response_text_msg(self, content):
         return self.TEXT_MSG.format(to_user_name=self.msg['FromUserName'],
                                     from_user_name=self.msg['ToUserName'],
