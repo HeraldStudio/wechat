@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1"/>
+		<link rel="stylesheet" href="{{ static_url('css/jquery.mobile-1.4.2.css') }}">
+		<title>绑定账号</title>
+	</head>
+
+	<body>
+		<div data-role="page">
+			<div class="content">
+				<div data-role="fieldcontain">
+					<fieldset data-role="controlgroup">
+						<input type="text" id="cardnum" placeholder="一卡通号" value="">
+						<input type="password" id="password" placeholder="统一身份认证密码" value="">
+					</fieldset>
+				</div>
+				<div data-role="fieldcontain">
+					<fieldset data-role="controlgroup">
+						<input type="password" id="pe_password" placeholder="跑操查询密码" value="">
+					</fieldset>
+				</div>
+				<div data-role="fieldcontain">
+					<fieldset data-role="controlgroup">
+						<input type="text" id="lib_username" placeholder="图书馆查询账号" value="">
+						<input type="password" id="lib_password" placeholder="图书馆查询密码" value="">
+					</fieldset>
+				</div>
+				<div data-role="fieldcontain">
+					<fieldset data-role="controlgroup">
+						<a data-role="button" data-transition="fade" id="bind-btn" data-theme="a">绑定</a>
+						<br/>
+						<p>初始跑操查询密码与一卡通号相同。</p>
+						<p>10 - 12 级初始图书馆账号为未分专业时学号。</p>
+						<p>13 级初始图书馆账号为一卡通号。</p>
+						<p>初始图书馆密码为一卡通号。</p>
+					</fieldset>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="{{ static_url('js/jquery.min.js') }}"></script>
+		<script type="text/javascript" src="{{ static_url('js/jquery.mobile-1.4.2.min.js') }}"></script>
+		<script>
+		$(document).ready(function(){
+			$('#bind-btn').on('click',function(){
+				$.mobile.loading('show', {theme:"a", text:"Please wait...", textonly:true, textVisible: true});
+
+				setTimeout(function(){
+					$.ajax({
+						url:'/register/{{openid}}/',
+						type:'POST',
+						data:{
+							'cardnum': $('#cardnum').val(),
+							'password': $('#password').val(),
+							'pe_password': $('#pe_password').val(),
+							'lib_username': $('#lib_username').val(),
+							'lib_password': $('#lib_password').val()
+						},
+						success:function(e){
+							$.mobile.loading('hide');
+							if(e == 'success'){
+								$('.content').html('<div style="margin-top:100px;"><center>绑定成功</center></div>');
+							}else{
+								alert(e);
+							}
+						},
+						error:function(e){
+							$.mobile.loading('hide');
+							alert('绑定失败,请检查网络');
+						}
+					});
+				}, 50);
+
+			});
+		});
+		</script>
+
+	</body>
+</html>
