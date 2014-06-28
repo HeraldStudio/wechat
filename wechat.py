@@ -3,7 +3,7 @@
 # @Author  : xindervella@gamil.com
 import hashlib
 import time
-from xml.etree import ElementTree as ET
+import xml.etree.ElementTree as ET
 
 
 class Message(object):
@@ -33,8 +33,8 @@ class Message(object):
         else:
             return False
 
-    def parser_msg(self, msg):
-        root = ET.formstring(msg)
+    def parse_msg(self, msg):
+        root = ET.fromstring(msg)
         for child in root:
             self.msg[child.tag] = child.text
         return self.msg

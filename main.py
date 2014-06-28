@@ -19,7 +19,7 @@ class Application(tornado.web.Application):
 
     def __init__(self):
         handlers = [
-            (r'/', WechatHandler)
+            (r'/wechat/', WechatHandler)
         ]
         settings = dict(
             cookie_secret="7CA71A57B571B5AEAC5E64C6042415DE",
@@ -41,17 +41,18 @@ class WechatHandler(tornado.web.RequestHandler):
             self.write('access verification fail')
 
     def post(self):
-        wx = wechat.Message(tooken='herald')
+        wx = wechat.Message(token='herald')
         if wx.check_signature(self.get_argument('signature', default=''),
                               self.get_argument('timestamp', default=''),
                               self.get_argument('nonce', default='')):
-            msg = wx.parser(self.request.body)
+            msg = wx.parse_msg(self.request.body)
             if wx.msg_type == 'event' and wx.envent == 'subscribe':
                 self.write(wx.response_text_msg('welcome'))
             else:
                 self.write(wx.response_text_msg(json.dumps(msg)))
         else:
-            self.write('message processing fail')
+            wx.parse_msg(self.request.body)
+            self.write(wx.response_text_msg('message processing fail'))
 
 
 if __name__ == '__main__':
