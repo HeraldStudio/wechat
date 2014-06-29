@@ -3,18 +3,21 @@
 # @Author  : xindervella@gamil.com
 
 from sqlalchemy.orm import scoped_session, sessionmaker
+from sqlalchemy.orm.exc import NoResultFound
+from config import SERVICE, TIME_OUT, TERM
 from mod.models.db import engine
 from mod.user.user_handler import UserHandler
-from tornado.httpclient import HTTPRequest, HTTPClient
+from mod.models.course import Course
 from mod.models.user import User
-from config import SERVICE, TERM, TIME_OUT
+from mod.units.today import today
+from tornado.httpclient import HTTPRequest, HTTPClient
 import tornado.web
 import tornado.ioloop
 import tornado.httpserver
 import tornado.options
 import tornado.gen
-import urllib
 import wechat
+import urllib
 import json
 import os
 
@@ -45,6 +48,13 @@ class WechatHandler(tornado.web.RequestHandler):
     def db(self):
         return self.application.db
 
+    @property
+    def unitsmap(self):
+        return {
+            'update-curriculum': self.update_curriculum,
+            'get-curriculum': self.get_curriculum
+        }
+
     def get(self):
         self.wx = wechat.Message(token='herald')
         if self.wx.check_signature(self.get_argument('signature', default=''),
@@ -55,44 +65,76 @@ class WechatHandler(tornado.web.RequestHandler):
             self.write('access verification fail')
 
     @tornado.web.asynchronous
-    @tornado.gen.engine
     def post(self):
         self.wx = wechat.Message(token='herald')
-        # self.wx.check_signature(self.get_argument('signature', default=''),
+        # if self.wx.check_signature(self.get_argument('signature', default=''),
         #                        self.get_argument('timestamp', default=''),
         #                        self.get_argument('nonce', default='')):
         if True:
-            msg = self.wx.parse_msg(self.request.body)
+            self.wx.parse_msg(self.request.body)
             if self.wx.msg_type == 'event' and self.wx.event == 'subscribe':
                 self.write(self.wx.response_text_msg('welcome'))
-            elif self.wx.event_key == 'curriculum' or \
-                    self.wx.content == 'curriculum':
-                self.curriculum(self.wx.openid)
+            elif self.wx.msg_type == 'text':
+                try:
+                    user = self.db.query(User).filter(
+                        User.openid == self.wx.openid).one()
+                    self.unitsmap[self.wx.content](user)
+                except NoResultFound:
+                    self.write(self.wx.response_text_msg(u'=。= 不如先绑定一下？'))
+
+            elif self.wx.msg_type == 'event':
+                try:
+                    user = self.db.query(User).filter(
+                        User.openid == self.wx.openid).one()
+                    self.unitsmap[self.wx.event_key](user)
+                except NoResultFound:
+                    self.write(self.wx.response_text_msg(u'=。= 不如先绑定一下？'))
+
             else:
-                self.write(self.wx.response_text_msg(json.dumps(msg)))
+                self.write(self.wx.response_text_msg(u'??'))
         else:
-            self.wx.parse_msg(self.request.body)
-            self.write(self.wx.response_text_msg('message processing fail'))
+            self.write('message processing fail')
 
+    def update_curriculum(self, user):
+        client = HTTPClient()
+        params = urllib.urlencode({
+            'cardnum': user.cardnum,
+            'term': TERM
+        })
+        request = HTTPRequest(SERVICE + 'curriculum', method='POST',
+                              body=params, request_timeout=TIME_OUT)
+        response = client.fetch(request)
+        if (not response.headers) or response.body == 'time out':
+            self.write(self.wx.response_text_msg(u'= =# 由于网络状况更新失败 请稍后再试'))
+            self.finish()
+        else:
+            self.write(self.wx.response_text_msg(u'更新成功'))
+            self.finish()
+            courses = self.db.query(Course).filter(
+                Course.openid == user.openid).all()
+            for course in courses:
+                self.db.delete(course)
+            curriculum = json.loads(response.body)
+            for day, items in curriculum.items():
+                for item in items:
+                    self.db.add(Course(openid=user.openid,
+                                       course=item[0],
+                                       period=item[1],
+                                       place=item[2],
+                                       day=day))
+            self.db.commit()
+
+    def get_curriculum(self, user):
+        courses = self.db.query(Course).filter(
+            Course.openid == user.openid, Course.day == today()).all()
+        msg = ''
+        for course in courses:
+            msg += course.course + '\n' + \
+                course.period + '\n' + course.place + '\n\n'
+        if not msg:
+            msg = '没课哦'
+        self.write(self.wx.response_text_msg(msg.strip().decode('utf-8')))
         self.finish()
-
-    def curriculum(self, openid):
-        user = self.db.query(User).filter(User.openid == openid)
-        try:
-            user = self.db.query(User).filter(User.openid == openid).one()
-            client = HTTPClient()
-            params = urllib.urlencode({
-                'cardnum': user.cardnum,
-                'term': TERM
-            })
-            request = HTTPRequest(SERVICE + 'curriculum', method='POST',
-                                  body=params, request_timeout=TIME_OUT)
-            response = client.fetch(request)
-            print response.body
-            self.write(self.wx.response_text_msg(
-                json.loads(response.body)))
-        except:
-            self.write(self.wx.response_text_msg('11'))
 
 
 if __name__ == '__main__':
