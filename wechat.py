@@ -53,7 +53,24 @@ class Message(object):
 
     @property
     def content(self):
-        return self.msg.get('Content', None)
+        content = self.msg.get('Content', None)
+        print content.encode('utf-8')
+        if u'更新' in content:
+            return 'update-curriculum'
+        elif u'课' in content:
+            if u'明' in content:
+                return 'tomorrow-curriculum'
+            else:
+                return 'today-curriculum'
+        elif u'跑' in content:
+            if u'操' in content:
+                return 'pe'
+            elif u'次' in content:
+                return 'pe'
+            else:
+                return 'nothing'
+        else:
+            return 'nothing'
 
     @property
     def openid(self):

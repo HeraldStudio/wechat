@@ -23,7 +23,10 @@ class UserHandler(tornado.web.RequestHandler):
         lib_password = self.get_argument('lib_password', default='')
 
         if not openid:
-            self.write('with out open id')
+            self.write('access verification fail')
+        elif not cardnum:
+            self.write('至少填一下一卡通号吧')
+
         else:
             try:
                 user = self.db.query(User).filter(User.openid == openid).one()

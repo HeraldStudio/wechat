@@ -6,3 +6,7 @@ from time import time, localtime, strftime
 
 def today():
     return strftime('%a', localtime(time()))
+
+
+def tomorrow():
+    return strftime('%a', localtime(time() + 24 * 3600))

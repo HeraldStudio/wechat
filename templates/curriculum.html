@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1"/>
+		<link rel="stylesheet" href="{{ static_url('css/jquery.mobile-1.4.2.css') }}">
+		<title>课表</title>
+	</head>
+	<body>
+	<div data-role="page">
+		<div role="main" class="ui-content">
+			<center>
+			<div data-role="fieldcontain">
+				<form>
+					<fieldset data-role="controlgroup" data-type="horizontal" data-mini="true">
+						{% for key, value in daymap.items() %}
+						<input type="radio" name="day" id="{{key}}" {% if key == today %}checked="checked"{% end %}>
+						<label for="{{key}}">{{value}}</label>
+						{% end %}
+					</fieldset>
+				</form>
+
+				<ul id="curriculum" data-role="listview" data-inset="true">
+					{% for course in courses%}
+					<li class="{% if course.day != today %}ui-screen-hidden{% end %} day {{course.day}}">
+						<h2>{{course.course}}</h2>
+						<p>{{' '.join(p.split(course.period)).strip()}}</p>
+						<p>{{' '.join(p.split(course.place)).strip()}}</p>
+					</li>
+					{% end %}
+					{% for day in daymap.keys() %}
+						{% if day not in days %}
+					<li class="{% if day != today %}ui-screen-hidden{% end %} day {{day}}">
+						<h2>没课你敢信？</h2>
+					</li>
+						{% end %}
+					{% end %}
+				</ul>
+			</div>
+			</center>
+		</div>
+	</div>
+
+	<script type="text/javascript" src="{{ static_url('js/jquery.min.js') }}"></script>
+	<script type="text/javascript" src="{{ static_url('js/jquery.mobile-1.4.2.min.js') }}"></script>
+	<script type="text/javascript">
+	$(document).ready(function(){
+		$("[type=radio]").on('click',function(){
+			$('.day').addClass("ui-screen-hidden");
+			$('.' + this.id).removeClass("ui-screen-hidden");
+		});
+	});
+	</script>
+	</body>
+</html>
