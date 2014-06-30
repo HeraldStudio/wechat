@@ -7,7 +7,7 @@
 
 import tornado.web
 from ..models.course import Course
-from weekday import today, tomorrow
+from weekday import today
 from collections import OrderedDict
 import re
 
@@ -36,5 +36,5 @@ class CurriculumHandler(tornado.web.RequestHandler):
 
         p = re.compile(r'\[|\]|\(|\)')
         self.render(
-            'curriculum.html', courses=courses, today=tomorrow(),
+            'curriculum.html', courses=courses, today=today(),
             daymap=daymap, days=days, p=p)

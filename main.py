@@ -4,7 +4,7 @@
 
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.orm.exc import NoResultFound
-from config import SERVICE, TIME_OUT, TERM
+from config import SERVICE, TIME_OUT, TERM, LOCAL
 from mod.models.db import engine
 from mod.user.user_handler import UserHandler
 from mod.units.curriculum_handler import CurriculumHandler
@@ -30,9 +30,9 @@ class Application(tornado.web.Application):
 
     def __init__(self):
         handlers = [
-            (r'/wechat/', WechatHandler),
-            (r'/register/([\S]+)/', UserHandler),
-            (r'/curriculum/([\S]+)/', CurriculumHandler)
+            (r'/wechat', WechatHandler),
+            (r'/wechat/register/([\S]+)', UserHandler),
+            (r'/wechat/curriculum/([\S]+)', CurriculumHandler)
         ]
         settings = dict(
             cookie_secret="7CA71A57B571B5AEAC5E64C6042415DE",
@@ -85,20 +85,27 @@ class WechatHandler(tornado.web.RequestHandler):
                         User.openid == self.wx.openid).one()
                     self.unitsmap[self.wx.content](user)
                 except NoResultFound:
-                    self.write(self.wx.response_text_msg(u'=。= 不如先绑定一下？'))
-
+                    self.write(self.wx.response_text_msg(
+                        u'<a href="%s/register/%s">=。= 不如先绑定一下？</a>' % (
+                            LOCAL, self.wx.openid)))
+                    self.finish()
             elif self.wx.msg_type == 'event':
                 try:
                     user = self.db.query(User).filter(
                         User.openid == self.wx.openid).one()
                     self.unitsmap[self.wx.event_key](user)
+                    self.finish()
                 except NoResultFound:
-                    self.write(self.wx.response_text_msg(u'=。= 不如先绑定一下？'))
-
+                    self.write(self.wx.response_text_msg(
+                        u'<a href="%s/register/%s">=。= 不如先绑定一下？</a>' % (
+                            LOCAL, self.wx.openid)))
+                    self.finish()
             else:
                 self.write(self.wx.response_text_msg(u'??'))
+                self.finish()
         else:
             self.write('message processing fail')
+            self.finish()
 
     # 课表
 
@@ -140,17 +147,16 @@ class WechatHandler(tornado.web.RequestHandler):
     def get_curriculum(self, user, day):
         courses = self.db.query(Course).filter(
             Course.openid == user.openid, Course.day == day).all()
-        msg = ''
+        msg = u''
         for course in courses:
-            msg += course.course + '\n' + \
-                course.period + '\n' + course.place + '\n\n'
+            msg += course.course + u'\n' + \
+                course.period + u'\n' + course.place + u'\n\n'
         if not msg:
-            msg = '没课哦'
+            msg = u'没课哦'
         msg = msg.strip() + '\n\n' + \
-            '<a href="http://127.0.0.1:7000/curriculum/%s/">\
-点击查看完整课表</a>' % user.openid
-
-        self.write(self.wx.response_text_msg(msg.decode('utf-8')))
+            u'<a href="%s/curriculum/%s">查看课表</a>' % (
+                LOCAL, user.openid)
+        self.write(self.wx.response_text_msg(msg))
         self.finish()
 
     def help(self, user):

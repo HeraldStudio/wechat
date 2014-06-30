@@ -4,6 +4,7 @@
 
 import tornado.web
 from ..models.user import User
+from ..units.init_curriculum import init_curriculum
 
 
 class UserHandler(tornado.web.RequestHandler):
@@ -15,6 +16,7 @@ class UserHandler(tornado.web.RequestHandler):
     def get(self, openid):
         self.render('register.html', openid=openid)
 
+    @tornado.web.asynchronous
     def post(self, openid):
         cardnum = self.get_argument('cardnum', default='')
         password = self.get_argument('password', default='')
@@ -24,9 +26,10 @@ class UserHandler(tornado.web.RequestHandler):
 
         if not openid:
             self.write('access verification fail')
+            self.finish()
         elif not cardnum:
-            self.write('至少填一下一卡通号吧')
-
+            self.write('同学，至少填一下一卡通号吧')
+            self.finish()
         else:
             try:
                 user = self.db.query(User).filter(User.openid == openid).one()
@@ -48,3 +51,5 @@ class UserHandler(tornado.web.RequestHandler):
             finally:
                 self.db.commit()
                 self.write('success')
+                self.finish()
+                init_curriculum(self.db, user)

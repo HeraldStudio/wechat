@@ -54,7 +54,6 @@ class Message(object):
     @property
     def content(self):
         content = self.msg.get('Content', None)
-        print content.encode('utf-8')
         if u'更新' in content:
             return 'update-curriculum'
         elif u'课' in content:
