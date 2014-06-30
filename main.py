@@ -56,7 +56,7 @@ class WechatHandler(tornado.web.RequestHandler):
             'update-curriculum': self.update_curriculum,
             'today-curriculum': self.today_curriculum,
             'tomorrow-curriculum': self.tomorrow_curriculum,
-            'pe': self.help,
+            'pe': self.pe_counts,
             'nothing': self.help
         }
 
@@ -158,6 +158,41 @@ class WechatHandler(tornado.web.RequestHandler):
                 LOCAL, user.openid)
         self.write(self.wx.response_text_msg(msg))
         self.finish()
+
+    # 跑操
+
+    def pe_counts(self, user):
+        client = HTTPClient()
+        if user.pe_password:
+            pwd = user.pe_password
+        else:
+            pwd = user.cardnum
+        params = urllib.urlencode({
+            'cardnum': user.cardnum,
+            'pwd': pwd
+        })
+        request = HTTPRequest(SERVICE + 'pe', method='POST',
+                              body=params, request_timeout=TIME_OUT)
+        response = client.fetch(request)
+        if (not response.headers) or response.body == 'time out':
+            self.write(self.wx.response_text_msg(u'= =# 体育系暂时无法连接，待会再试试吧'))
+            self.finish()
+        elif response.body == 'wrong card number or password':
+            self.write(self.wx.response_text_msg(
+                u'<a href="%s/register/%s">=。= 同学，密码错了吧，点我重新绑定。</a>'))
+            self.finish()
+        else:
+            try:
+                counts = int(response.body)
+                self.write(self.wx.response_text_msg(
+                           u'当前跑操次数 %d 次' % counts))
+                self.finish()
+            except:
+                self.write(self.wx.response_text_msg(
+                           u'=。= 出了点故障，待会再试试吧'))
+                self.finish()
+
+    # 其他
 
     def help(self, user):
         self.write(self.wx.response_text_msg(u'=。='))
