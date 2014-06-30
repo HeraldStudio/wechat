@@ -68,6 +68,11 @@ class Message(object):
                 return 'pe'
             else:
                 return 'nothing'
+        elif u'书' in content:
+            if u'借' in content:
+                return 'library'
+            elif u'图' in content:
+                return 'library'
         else:
             return 'nothing'
 

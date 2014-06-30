@@ -4,10 +4,11 @@
 
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.orm.exc import NoResultFound
-from config import SERVICE, TIME_OUT, TERM, LOCAL
+from config import SERVICE, TIME_OUT, TERM, LOCAL, LIBRARY
 from mod.models.db import engine
 from mod.user.user_handler import UserHandler
 from mod.units.curriculum_handler import CurriculumHandler
+from mod.units.renew_handler import RenewHandler
 from mod.models.course import Course
 from mod.models.user import User
 from mod.units.weekday import today, tomorrow
@@ -30,9 +31,10 @@ class Application(tornado.web.Application):
 
     def __init__(self):
         handlers = [
-            (r'/wechat', WechatHandler),
+            (r'/wechat/', WechatHandler),
             (r'/wechat/register/([\S]+)', UserHandler),
-            (r'/wechat/curriculum/([\S]+)', CurriculumHandler)
+            (r'/wechat/curriculum/([\S]+)', CurriculumHandler),
+            (r'/wechat/renew/([\S]+)/([\S]+)', RenewHandler)
         ]
         settings = dict(
             cookie_secret="7CA71A57B571B5AEAC5E64C6042415DE",
@@ -41,7 +43,9 @@ class Application(tornado.web.Application):
             debug=True
         )
         tornado.web.Application.__init__(self, handlers, **settings)
-        self.db = scoped_session(sessionmaker(bind=engine))
+        self.db = scoped_session(sessionmaker(bind=engine,
+                                 autocommit=False, autoflush=True,
+                                 expire_on_commit=False))
 
 
 class WechatHandler(tornado.web.RequestHandler):
@@ -57,6 +61,7 @@ class WechatHandler(tornado.web.RequestHandler):
             'today-curriculum': self.today_curriculum,
             'tomorrow-curriculum': self.tomorrow_curriculum,
             'pe': self.pe_counts,
+            'library': self.rendered,
             'nothing': self.help
         }
 
@@ -108,6 +113,7 @@ class WechatHandler(tornado.web.RequestHandler):
             self.finish()
 
     # 课表
+    # 更新频率较低，无需缓存
 
     def update_curriculum(self, user):
         client = HTTPClient()
@@ -119,7 +125,7 @@ class WechatHandler(tornado.web.RequestHandler):
                               body=params, request_timeout=TIME_OUT)
         response = client.fetch(request)
         if (not response.headers) or response.body == 'time out':
-            self.write(self.wx.response_text_msg(u'= =# 由于网络状况更新失败 请稍后再试'))
+            self.write(self.wx.response_text_msg(u'=。= 由于网络状况更新失败，不如待会再试试'))
             self.finish()
         else:
             self.write(self.wx.response_text_msg(u'更新成功'))
@@ -160,6 +166,7 @@ class WechatHandler(tornado.web.RequestHandler):
         self.finish()
 
     # 跑操
+    # service 做了缓存，这里不再缓存
 
     def pe_counts(self, user):
         client = HTTPClient()
@@ -175,11 +182,12 @@ class WechatHandler(tornado.web.RequestHandler):
                               body=params, request_timeout=TIME_OUT)
         response = client.fetch(request)
         if (not response.headers) or response.body == 'time out':
-            self.write(self.wx.response_text_msg(u'= =# 体育系暂时无法连接，待会再试试吧'))
+            self.write(self.wx.response_text_msg(u'=。= 体育系暂时无法连接，不如待会再试试吧'))
             self.finish()
         elif response.body == 'wrong card number or password':
             self.write(self.wx.response_text_msg(
-                u'<a href="%s/register/%s">=。= 同学，密码错了吧，点我重新绑定。</a>'))
+                u'<a href="%s/register/%s">=。= 同学，密码错了吧，快点我重新绑定。</a>' % (
+                    LOCAL, user.openid)))
             self.finish()
         else:
             try:
@@ -189,7 +197,51 @@ class WechatHandler(tornado.web.RequestHandler):
                 self.finish()
             except:
                 self.write(self.wx.response_text_msg(
-                           u'=。= 出了点故障，待会再试试吧'))
+                           u'=。= 出了点故障，不如待会再试试吧'))
+                self.finish()
+
+    # 图书馆借书信息
+    # 暂时使用旧版服务
+    def rendered(self, user):
+        client = HTTPClient()
+        params = urllib.urlencode({
+            'username': user.lib_username,
+            'password': user.lib_password
+        })
+        request = HTTPRequest(LIBRARY, method='POST', body=params,
+                              request_timeout=TIME_OUT)
+        response = client.fetch(request)
+        if (not response.headers) or response.body == 'server error':
+            self.write(self.wx.response_text_msg(u'=。= 图书馆暂时无法连接，不如待会再试试'))
+            self.finish()
+        elif response.body == 'username or password error':
+            self.write(self.wx.response_text_msg(
+                u'<a href="%s/register/%s">=。= 同学，用户名/密码错了吧，快点我重新绑定。</a>' % (
+                    LOCAL, user.openid)))
+            self.finish()
+        else:
+            msg = u''
+            try:
+                books = json.loads(response.body)
+                for book in books:
+                    detail = u'\n%s\n%s\n借书时间：%s\n到期时间：%s' % (
+                        book['author'], book['place'],
+                        book['render_date'], book['due_date'])
+                    if book['renew_time'] == u'0':
+                        msg += u'<a href="%s/renew/%s/%s">《%s》</a>%s' % (
+                            LOCAL, user.openid, book['barcode'],
+                            book['title'], detail)
+                    else:
+                        msg += u'《%s》%s\n续借次数：%s' % (
+                            book['title'], detail, book['renew_time'])
+                    msg += u'\n\n'
+                msg += u'如果要续借的话请戳书名'
+                if not msg:
+                    msg = u'没有在图书馆借书哦'
+                self.write(self.wx.response_text_msg(msg.strip()))
+                self.finish()
+            except:
+                self.write(self.wx.response_text_msg(u'=。= 图书馆暂时无法连接，不如待会再试试'))
                 self.finish()
 
     # 其他

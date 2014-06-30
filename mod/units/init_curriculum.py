@@ -29,7 +29,5 @@ def init_curriculum(db, user):
                           period=item[1],
                           place=item[2],
                           day=day))
-    print 1
     db.commit()
-    print 2
     return
