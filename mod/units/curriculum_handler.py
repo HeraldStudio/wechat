@@ -20,7 +20,7 @@ class CurriculumHandler(tornado.web.RequestHandler):
 
     def get(self, openid):
         courses = self.db.query(Course).filter(Course.openid == openid).all()
-
+        self.db.close()
         daymap = OrderedDict()
         daymap['Mon'] = '一'
         daymap['Tue'] = '二'

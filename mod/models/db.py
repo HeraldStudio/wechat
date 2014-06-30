@@ -11,4 +11,5 @@ from sqlalchemy import create_engine
 
 engine = create_engine('mysql://%s:%s@%s/%s?charset=utf8' %
                        (DB_USER, DB_PWD, DB_HOST, DB_NAME),
-                       encoding='utf-8', echo=False)
+                       encoding='utf-8', echo=False,
+                       pool_size=100, pool_recycle=10)

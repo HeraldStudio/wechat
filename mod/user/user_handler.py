@@ -4,7 +4,6 @@
 
 import tornado.web
 from ..models.user import User
-from ..units.init_curriculum import init_curriculum
 
 
 class UserHandler(tornado.web.RequestHandler):
@@ -52,4 +51,5 @@ class UserHandler(tornado.web.RequestHandler):
                 self.db.commit()
                 self.write('success')
                 self.finish()
-                init_curriculum(self.db, user)
+                # init_curriculum(self.db, user) !!! 重写
+                self.db.close()

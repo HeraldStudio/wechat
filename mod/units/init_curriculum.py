@@ -29,5 +29,11 @@ def init_curriculum(db, user):
                           period=item[1],
                           place=item[2],
                           day=day))
-    db.commit()
+    try:
+        db.commit()
+    except:
+        db.rollback()
+    finally:
+        db.close()
+
     return

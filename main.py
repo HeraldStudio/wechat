@@ -88,6 +88,7 @@ class WechatHandler(tornado.web.RequestHandler):
                 try:
                     user = self.db.query(User).filter(
                         User.openid == self.wx.openid).one()
+                    self.db.close()
                     self.unitsmap[self.wx.content](user)
                 except NoResultFound:
                     self.write(self.wx.response_text_msg(
@@ -98,6 +99,7 @@ class WechatHandler(tornado.web.RequestHandler):
                 try:
                     user = self.db.query(User).filter(
                         User.openid == self.wx.openid).one()
+                    self.db.close()
                     self.unitsmap[self.wx.event_key](user)
                     self.finish()
                 except NoResultFound:
@@ -132,6 +134,7 @@ class WechatHandler(tornado.web.RequestHandler):
             self.finish()
             courses = self.db.query(Course).filter(
                 Course.openid == user.openid).all()
+
             for course in courses:
                 self.db.delete(course)
             curriculum = json.loads(response.body)
@@ -142,7 +145,12 @@ class WechatHandler(tornado.web.RequestHandler):
                                        period=item[1],
                                        place=item[2],
                                        day=day))
-            self.db.commit()
+            try:
+                self.db.commit()
+            except:
+                self.db.rollback()
+            finally:
+                self.db.close()
 
     def today_curriculum(self, user):
         self.get_curriculum(user, today())
@@ -153,6 +161,7 @@ class WechatHandler(tornado.web.RequestHandler):
     def get_curriculum(self, user, day):
         courses = self.db.query(Course).filter(
             Course.openid == user.openid, Course.day == day).all()
+        self.db.close()
         msg = u''
         for course in courses:
             msg += course.course + u'\n' + \
