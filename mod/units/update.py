@@ -7,6 +7,7 @@ from sqlalchemy.orm.exc import NoResultFound
 from config import SERVICE, TERM, TIME_OUT, LOCAL
 from ..models.course import Course
 from ..models.gpa import Overview as GPAO, Detail as GPAD
+from ..models.srtp import Overview as SRTPO, Detail as SRTPD
 import urllib
 import json
 
@@ -17,10 +18,14 @@ def curriculum(db, user):
         'cardnum': user.cardnum,
         'term': TERM
     })
+
     request = HTTPRequest(SERVICE + 'curriculum', method='POST',
                           body=params, request_timeout=TIME_OUT)
-    response = client.fetch(request)
-    if (not response.headers) or response.body == 'time out':
+    try:
+        response = client.fetch(request)
+    except:
+        return u'=。= 由于网络状况更新失败，不如待会再试试'
+    if response.body == 'time out':
         return u'=。= 由于网络状况更新失败，不如待会再试试'
     else:
         courses = db.query(Course).filter(Course.openid == user.openid).all()
@@ -36,7 +41,8 @@ def curriculum(db, user):
                               day=day))
         try:
             db.commit()
-            return u'更新成功'
+            return u'<a href="%s/curriculum/%s">更新好啦，点我查看</a>' % (
+                LOCAL, user.openid)
         except:
             db.rollback()
             return u'T T 出了点小问题'
@@ -50,10 +56,12 @@ def gpa(db, user):
     })
     request = HTTPRequest(SERVICE + 'gpa', method='POST',
                           body=params, request_timeout=TIME_OUT)
-    response = client.fetch(request)
-    if (not response.headers) or response.body == 'time out':
+    try:
+        response = client.fetch(request)
+    except:
         return u'=。= 由于网络状况更新失败，不如待会再试试'
-
+    if response.body == 'time out':
+        return u'=。= 由于网络状况更新失败，不如待会再试试'
     elif response.body == 'wrong username or password':
         return u'<a href="%s/register/%s">居然没有绩点你敢信？你不是把一卡通/\
 密码输错了吧，快点我修改。</a>' % (LOCAL, user.openid)
@@ -83,7 +91,55 @@ def gpa(db, user):
                         extra=item['extra']))
         try:
             db.commit()
-            return u'更新成功'
+            return u'<a href="%s/gpa/%s">更新好啦，点我查看</a>' % (
+                LOCAL, user.openid)
+        except:
+            db.rollback()
+            return u'T T 出了点小问题'
+
+
+def srtp(db, user):
+    client = HTTPClient()
+    params = urllib.urlencode({
+        'number': user.number
+    })
+    request = HTTPRequest(SERVICE + 'srtp', method='POST',
+                          body=params, request_timeout=TIME_OUT)
+    try:
+        response = client.fetch(request)
+    except:
+        return u'=。= 由于网络状况更新失败，不如待会再试试'
+    if response.body == 'time out':
+        return u'=。= 由于网络状况更新失败，不如待会再试试'
+    elif response.body == 'number not exist':
+        return u'<a href="%s/register/%s">=。= 同学，你学号填错了吧，快点我修改。</a>' % (
+            LOCAL, user.openid)
+    else:
+        srtp = json.loads(response.body)
+        try:
+            overview = db.query(SRTPO).filter(SRTPO.openid == user.openid).one()
+            overview.total = srtp[0]['total']
+            overview.score = srtp[0]['score']
+        except NoResultFound:
+            db.add(SRTPO(openid=user.openid,
+                         total=srtp[0]['total'],
+                         score=srtp[0]['score']))
+        items = db.query(SRTPD).filter(SRTPD.openid == user.openid).all()
+        for item in items:
+            db.delete(item)
+        for item in srtp[1:]:
+            db.add(SRTPD(openid=user.openid,
+                         project=item['project'],
+                         department=item['department'],
+                         date=item['date'],
+                         project_type=item['type'],
+                         total_credit=item['total credit'],
+                         credit=item['credit'],
+                         proportion=item['proportion']))
+        try:
+            db.commit()
+            return u'<a href="%s/srtp/%s">更新好啦，点我查看</a>' % (
+                LOCAL, user.openid)
         except:
             db.rollback()
             return u'T T 出了点小问题'

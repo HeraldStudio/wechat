@@ -12,6 +12,7 @@ class User(Base):
     __tablename__ = 'user'
     openid = Column(String(50), primary_key=True)
     cardnum = Column(String(50), nullable=False)
+    number = Column(String(50), nullable=True)
     password = Column(String(50), nullable=True)
     pe_password = Column(String(50), nullable=True)
     lib_username = Column(String(50), nullable=True)

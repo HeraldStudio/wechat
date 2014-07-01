@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1"/>
+		<link rel="stylesheet" href="{{ static_url('css/jquery.mobile-1.4.2.css') }}">
+		<title>SRTP</title>
+	</head>
+	<body>
+	<div data-role="page">
+		<div role="main" class="ui-content">
+			<center>
+			<div data-role="fieldcontain">
+
+				<ul id="curriculum" data-role="listview" data-inset="true">
+					{% for item in detail %}
+					<li>
+						<h2>{{item[0]}}<small>{{item[3]}}</small></h2>
+						{% if item[1] %}<p>认定院系：{{item[1]}}</p>{% end %}
+						{% if item[1] %}<p>日期：{{item[2]}}</p>{% end %}
+						<p>{% if item[4] %}总学分：{{item[4]}}&nbsp;&nbsp;&nbsp;&nbsp;{% end %}{% if item[6] %}比例：{{item[6]}} &nbsp;&nbsp;&nbsp;&nbsp;{% end %}{% if item[5] %}学分：{{item[5]}}{% end %}</p>
+					</li>
+					{% end %}
+				</ul>
+			</div>
+			</center>
+		</div>
+	</div>
+
+	<script type="text/javascript" src="{{ static_url('js/jquery.min.js') }}"></script>
+	<script type="text/javascript" src="{{ static_url('js/jquery.mobile-1.4.2.min.js') }}"></script>
+	</body>
+</html>

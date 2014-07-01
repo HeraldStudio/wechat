@@ -10,6 +10,7 @@ from mod.user.user_handler import UserHandler
 from mod.units.curriculum_handler import CurriculumHandler
 from mod.units.renew_handler import RenewHandler
 from mod.units.gpa_handler import GPAHandler
+from mod.units.srtp_handler import SRTPHandler
 from mod.units import update
 from mod.units import get
 from mod.models.user import User
@@ -35,6 +36,8 @@ class Application(tornado.web.Application):
             (r'/wechat/curriculum/([\S]+)', CurriculumHandler),
             (r'/wechat/renew/([\S]+)/([\S]+)', RenewHandler),
             (r'/wechat/gpa/([\S]+)', GPAHandler),
+            (r'/wechat/srtp/([\S]+)', SRTPHandler),
+
         ]
         settings = dict(
             cookie_secret="7CA71A57B571B5AEAC5E64C6042415DE",
@@ -64,6 +67,9 @@ class WechatHandler(tornado.web.RequestHandler):
             'library': self.rendered,
             'gpa': self.gpa,
             'update-gpa': self.update_gpa,
+            'srtp': self.srtp,
+            'update-srtp': self.update_srtp,
+            'play': self.play,
             'nothing': self.help
         }
 
@@ -125,12 +131,6 @@ class WechatHandler(tornado.web.RequestHandler):
         self.write(self.wx.response_text_msg(msg))
         self.finish()
 
-    def update_gpa(self, user):
-        msg = update.gpa(self.db, user)
-        self.write(self.wx.response_text_msg(msg))
-        self.finish()
-        self.db.close()
-
     def today_curriculum(self, user):
         msg = get.curriculum(self.db, user, today())
         self.write(self.wx.response_text_msg(msg))
@@ -163,13 +163,35 @@ class WechatHandler(tornado.web.RequestHandler):
         msg = get.gpa(self.db, user)
         self.write(self.wx.response_text_msg(msg))
         self.finish()
-        update.gpa(self.db, user)
-        self.db.close()
+
+    def update_gpa(self, user):
+        msg = update.gpa(self.db, user)
+        self.write(self.wx.response_text_msg(msg))
+        self.finish()
+
+    # SRTP
+    def srtp(self, user):
+        msg = get.srtp(self.db, user)
+        self.write(self.wx.response_text_msg(msg))
+        self.finish()
+
+    def update_srtp(self, user):
+        msg = update.srtp(self.db, user)
+        self.write(self.wx.response_text_msg(msg))
+        self.finish()
+
+    # 调戏
+    def play(self, user):
+        msg = u'=。= 暂不接受调戏'
+        self.write(self.wx.response_text_msg(msg))
+        self.finish()
 
     # 其他
 
     def help(self, user):
-        self.write(self.wx.response_text_msg(u'=。='))
+        msg = u'<a href="http://mp.weixin.qq.com/s?__biz=MjM5NDI3NDc2MQ==\
+&mid=200984232&idx=1&sn=ec01bf7cce773f47be60b185382c3cec#rd"> =。= 点我查看使用说明 </a>'
+        self.write(self.wx.response_text_msg(msg))
         self.finish()
 
 if __name__ == '__main__':

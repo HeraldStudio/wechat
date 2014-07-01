@@ -13,6 +13,7 @@
 				<div data-role="fieldcontain">
 					<fieldset data-role="controlgroup">
 						<input type="text" id="cardnum" placeholder="一卡通号" value="">
+						<input type="text" id="number" placeholder="学号" value="">
 						<input type="password" id="password" placeholder="统一身份认证密码" value="">
 					</fieldset>
 				</div>
@@ -52,6 +53,7 @@
 						type:'POST',
 						data:{
 							'cardnum': $('#cardnum').val(),
+							'number': $('#number').val(),
 							'password': $('#password').val(),
 							'pe_password': $('#pe_password').val(),
 							'lib_username': $('#lib_username').val(),
