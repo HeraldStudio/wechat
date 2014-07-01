@@ -88,10 +88,9 @@ class WechatHandler(tornado.web.RequestHandler):
     @tornado.web.asynchronous
     def post(self):
         self.wx = wechat.Message(token='herald')
-        # if self.wx.check_signature(self.get_argument('signature', default=''),
-        #                        self.get_argument('timestamp', default=''),
-        #                        self.get_argument('nonce', default='')):
-        if True:
+        if self.wx.check_signature(self.get_argument('signature', default=''),
+                                   self.get_argument('timestamp', default=''),
+                                   self.get_argument('nonce', default='')):
             self.wx.parse_msg(self.request.body)
             if self.wx.msg_type == 'event' and self.wx.event == 'subscribe':
                 self.write(self.wx.response_text_msg('welcome'))
