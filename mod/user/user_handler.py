@@ -4,6 +4,7 @@
 
 import tornado.web
 from ..models.user import User
+from ..units import update
 
 
 class UserHandler(tornado.web.RequestHandler):
@@ -45,11 +46,12 @@ class UserHandler(tornado.web.RequestHandler):
             except:
                 user = User(openid=openid, cardnum=cardnum, password=password,
                             pe_password=pe_password, lib_username=lib_username,
-                            lib_password=lib_password)
+                            lib_password=lib_password, state=0)
                 self.db.add(user)
             finally:
                 self.db.commit()
                 self.write('success')
                 self.finish()
-                # init_curriculum(self.db, user) !!! 重写
+                update.curriculum(self.db, user)
+                update.gpa(self.db, user)
                 self.db.close()

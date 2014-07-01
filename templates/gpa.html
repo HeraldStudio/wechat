@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1"/>
+		<link rel="stylesheet" href="{{ static_url('css/jquery.mobile-1.4.2.css') }}">
+		<title>GPA</title>
+	</head>
+	<body>
+	<div data-role="page">
+		<div role="main" class="ui-content">
+			<center>
+			<div data-role="fieldcontain">
+				{% if detail %}<form>
+					{% set index = 0 %}
+					{% for key in detail.keys() %}
+					{% if index == 0 %}<fieldset data-role="controlgroup" data-type="horizontal" data-mini="true">{% end %}
+						<input type="radio" name="semester" id="{{key}}" {% if not detail.keys().index(key) %}checked="checked"{% end %}>
+						<label for="{{key}}">{{key}}</label>{% set index += 1 %}
+					{% if index == 3 %}</fieldset>{% set index = 0 %}{% end %}
+					{% end %}
+					{% if index != 3 %}</fieldset>{% end %}
+				</form>
+
+				<ul id="curriculum" data-role="listview" data-inset="true">
+					{% for key, value in detail.items() %}{% for item in value %}
+					<li class="{% if detail.keys().index(key) != 0 %}ui-screen-hidden{% end %} semester {{key}}">
+						<h2>{{item[0]}}</h2>
+						<p>成绩：{{item[2]}} &nbsp;&nbsp;&nbsp;{{item[3]}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 学分：{{item[1]}}  </p>
+						{% if item[4] %}<p>{{item[4]}}</p>{% end %}
+					</li>
+					{% end %}{% end %}
+				</ul>
+				{% else %}<center><h2 style="margin-top: 30%">=。= 你逗我？</h2></center>{% end %}
+			</div>
+			</center>
+		</div>
+	</div>
+
+	<script type="text/javascript" src="{{ static_url('js/jquery.min.js') }}"></script>
+	<script type="text/javascript" src="{{ static_url('js/jquery.mobile-1.4.2.min.js') }}"></script>
+	<script type="text/javascript">
+	$(document).ready(function(){
+		$("[type=radio]").on('click',function(){
+			$('.semester').addClass("ui-screen-hidden");
+			$('.' + this.id).removeClass("ui-screen-hidden");
+		});
+	});
+	</script>
+	</body>
+</html>

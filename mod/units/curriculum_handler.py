@@ -38,3 +38,6 @@ class CurriculumHandler(tornado.web.RequestHandler):
         self.render(
             'curriculum.html', courses=courses, today=today(),
             daymap=daymap, days=days, p=p)
+
+    def on_finish(self):
+        self.db.close()

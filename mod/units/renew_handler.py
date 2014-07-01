@@ -49,3 +49,6 @@ class RenewHandler(tornado.web.RequestHandler):
             self.write('access verification fail')
         finally:
             self.finish()
+
+    def on_finish(self):
+        self.db.close()

@@ -55,7 +55,12 @@ class Message(object):
     def content(self):
         content = self.msg.get('Content', None)
         if u'更新' in content:
-            return 'update-curriculum'
+            if u'课' in content:
+                return 'update-curriculum'
+            elif u'绩' in content:
+                return 'update-gpa'
+            elif u'gpa' in content:
+                return 'update-gpa'
         elif u'课' in content:
             if u'明' in content:
                 return 'tomorrow-curriculum'
@@ -73,8 +78,16 @@ class Message(object):
                 return 'library'
             elif u'图' in content:
                 return 'library'
-        else:
-            return 'nothing'
+        elif u'GPA' in content:
+            return 'gpa'
+        elif u'gpa' in content:
+            return 'gpa'
+        elif u'绩点' in content:
+            return 'gpa'
+        elif u'成绩' in content:
+            return 'gpa'
+
+        return 'nothing'
 
     @property
     def openid(self):

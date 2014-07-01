@@ -5,8 +5,8 @@ from time import time, localtime, strftime
 
 
 def today():
-    return strftime('%a', localtime(time()))
+    return strftime('%a', localtime(time() + 12 * 3600))
 
 
 def tomorrow():
-    return strftime('%a', localtime(time() + 24 * 3600))
+    return strftime('%a', localtime(time() + 32 * 3600))
