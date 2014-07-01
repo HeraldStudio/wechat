@@ -1,42 +1,47 @@
 {
     "button": [
         {
-            "name": "课表",
+            "name": "么",
             "sub_button": [
                 {
                     "type": "click",
-                    "name": "更新课表",
-                    "key": "UpdateCurriculum"
+                    "name": "今天课表",
+                    "key": "today-curriculum"
                 },
                 {
                     "type": "click",
                     "name": "明天课表",
-                    "key": "CurriculumTomorrow"
+                    "key": "tomorrow-curriculum"
                 },
                 {
                     "type": "click",
-                    "name": "今天课表",
-                    "key": "CurriculumToday"
+                    "name": "图书馆",
+                    "key": "library"
                 },
                 {
                     "type": "click",
-                    "name": "下节课",
-                    "key": "CurriculumNext"
+                    "name": "GPA",
+                    "key": "gpa"
+                },
+                {
+                    "type": "click",
+                    "name": "SRTP",
+                    "key": "srtp"
                 }
             ]
         },
         {
-            "name": "小工具",
+            "name": "么",
             "sub_button": [
                 {
                     "type": "click",
-                    "name": "更新绑定信息",
-                    "key": "Update"
+                    "name": "跑操",
+                    "key": "pe"
                 },
                 {
-                    "type": "click",
-                    "name": "教务信息",
-                    "key": "JwcInfo"
+                    "type": "view",
+                    "name": "树洞",
+                    "url": "http://herald.seu.edu.cn/treehole/"
                 },
                 {
                     "type": "view",
@@ -45,33 +50,38 @@
                 },
                 {
                     "type": "click",
-                    "name": "图书馆借书信息",
-                    "key": "Library"
-                },
-                {
-                    "type": "click",
-                    "name": "跑操次数",
-                    "key": "TyxPc"
+                    "name": "调戏",
+                    "key": "play"
                 }
             ]
         },
         {
-            "name":"更多...",
+            "name":"哒",
             "sub_button":[
                 {
                     "type": "click",
-                    "name": "配对",
-                    "key": "OpenChatWithUser"
+                    "name": "更新课表",
+                    "key": "update-curriculum"
                 },
                 {
                     "type": "click",
-                    "name": "退出",
-                    "key": "ExitChatWithUser"
+                    "name": "更新GPA",
+                    "key": "update-gpa"
                 },
                 {
                     "type": "click",
-                    "name": "关于",
-                    "key": "Instruction"
+                    "name": "更新SRTP",
+                    "key": "update-srtp"
+                },
+                {
+                    "type": "click",
+                    "name": "切换用户",
+                    "key": "change-user"
+                },
+                {
+                    "type": "view",
+                    "name": "使用说明",
+                    "url": "http://mp.weixin.qq.com/s?__biz=MjM5NDI3NDc2MQ==&mid=200984232&idx=1&sn=ec01bf7cce773f47be60b185382c3cec#rd"
                 }
             ]
         }

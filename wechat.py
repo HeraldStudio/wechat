@@ -106,6 +106,12 @@ class Message(object):
             return 'srtp'
         elif u'调戏' in content:
             return 'play'
+        elif u'绑定' in content:
+            return 'change-user'
+        elif u'重新' in content:
+            return 'change-user'
+        elif u'换人' in content:
+            return 'change-user'
         return 'nothing'
 
     @property

@@ -70,6 +70,7 @@ class WechatHandler(tornado.web.RequestHandler):
             'srtp': self.srtp,
             'update-srtp': self.update_srtp,
             'play': self.play,
+            'change-user': self.change_user,
             'nothing': self.help
         }
 
@@ -77,7 +78,7 @@ class WechatHandler(tornado.web.RequestHandler):
         self.db.close()
 
     def get(self):
-        self.wx = wechat.Message(token='herald')
+        self.wx = wechat.Message(token='xindervella')
         if self.wx.check_signature(self.get_argument('signature', default=''),
                                    self.get_argument('timestamp', default=''),
                                    self.get_argument('nonce', default='')):
@@ -87,7 +88,7 @@ class WechatHandler(tornado.web.RequestHandler):
 
     @tornado.web.asynchronous
     def post(self):
-        self.wx = wechat.Message(token='herald')
+        self.wx = wechat.Message(token='xindervella')
         if self.wx.check_signature(self.get_argument('signature', default=''),
                                    self.get_argument('timestamp', default=''),
                                    self.get_argument('nonce', default='')):
@@ -99,6 +100,7 @@ class WechatHandler(tornado.web.RequestHandler):
                     user = self.db.query(User).filter(
                         User.openid == self.wx.openid).one()
                     self.unitsmap[self.wx.content](user)
+                    self.finish()
                 except NoResultFound:
                     self.write(self.wx.response_text_msg(
                         u'<a href="%s/register/%s">=。= 不如先绑定一下？</a>' % (
@@ -108,7 +110,10 @@ class WechatHandler(tornado.web.RequestHandler):
                 try:
                     user = self.db.query(User).filter(
                         User.openid == self.wx.openid).one()
-                    self.unitsmap[self.wx.event_key](user)
+                    try:
+                        self.unitsmap[self.wx.event_key](user)
+                    except KeyError:
+                        pass
                     self.finish()
                 except NoResultFound:
                     self.write(self.wx.response_text_msg(
@@ -128,17 +133,14 @@ class WechatHandler(tornado.web.RequestHandler):
     def update_curriculum(self, user):
         msg = update.curriculum(self.db, user)
         self.write(self.wx.response_text_msg(msg))
-        self.finish()
 
     def today_curriculum(self, user):
         msg = get.curriculum(self.db, user, today())
         self.write(self.wx.response_text_msg(msg))
-        self.finish()
 
     def tomorrow_curriculum(self, user):
         msg = get.curriculum(self.db, user, tomorrow())
         self.write(self.wx.response_text_msg(msg))
-        self.finish()
 
     # 跑操
     # service 做了缓存，这里不再缓存
@@ -146,7 +148,6 @@ class WechatHandler(tornado.web.RequestHandler):
     def pe_counts(self, user):
         msg = get.pe_counts(user)
         self.write(self.wx.response_text_msg(msg))
-        self.finish()
 
     # 图书馆借书信息
     # 暂时使用旧版服务
@@ -154,44 +155,41 @@ class WechatHandler(tornado.web.RequestHandler):
     def rendered(self, user):
         msg = get.rendered(user)
         self.write(self.wx.response_text_msg(msg))
-        self.finish()
 
     # GPA
 
     def gpa(self, user):
         msg = get.gpa(self.db, user)
         self.write(self.wx.response_text_msg(msg))
-        self.finish()
 
     def update_gpa(self, user):
         msg = update.gpa(self.db, user)
         self.write(self.wx.response_text_msg(msg))
-        self.finish()
 
     # SRTP
     def srtp(self, user):
         msg = get.srtp(self.db, user)
         self.write(self.wx.response_text_msg(msg))
-        self.finish()
 
     def update_srtp(self, user):
         msg = update.srtp(self.db, user)
         self.write(self.wx.response_text_msg(msg))
-        self.finish()
 
     # 调戏
     def play(self, user):
         msg = u'=。= 暂不接受调戏'
         self.write(self.wx.response_text_msg(msg))
-        self.finish()
 
     # 其他
+    def change_user(self, user):
+        msg = u'当前用户为：%s \n\n\n<a href="%s/register/%s">点击重新绑定</a>' % (
+            user.cardnum, LOCAL, self.wx.openid)
+        self.write(self.wx.response_text_msg(msg))
 
     def help(self, user):
         msg = u'<a href="http://mp.weixin.qq.com/s?__biz=MjM5NDI3NDc2MQ==\
 &mid=200984232&idx=1&sn=ec01bf7cce773f47be60b185382c3cec#rd"> =。= 点我查看使用说明 </a>'
         self.write(self.wx.response_text_msg(msg))
-        self.finish()
 
 if __name__ == '__main__':
     tornado.options.parse_command_line()
