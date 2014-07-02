@@ -102,11 +102,16 @@ def gpa(db, user):
     try:
         overview = db.query(GPAO).filter(
             GPAO.openid == user.openid).one()
-        msg = u'总绩点：%s\n首修绩点：%s\n计算时间：%s\n\n' % (
-            overview.gpa, overview.before_revamp,
-            overview.calc_time.split(' ')[0])
-        msg += u'<a href="%s/gpa/%s">GPA详情</a>' % (
-            LOCAL, user.openid)
+        if overview.gpa:
+            msg = u'总绩点：%s\n首修绩点：%s\n计算时间：%s\n\n' % (
+                overview.gpa, overview.before_revamp,
+                overview.calc_time.split(' ')[0])
+            msg += u'<a href="%s/gpa/%s">GPA详情</a>' % (
+                LOCAL, user.openid)
+        else:
+            msg = u'你们学院居然没有计算GPA？\n\n<a href="%s/gpa/%s">GPA详情</a>' % (
+                LOCAL, user.openid)
+
     except:
         msg = u'<a href="%s/register/%s">居然没有绩点你敢信？你不是把一卡通/\
 密码输错了吧，快点我修改。</a>' % (LOCAL, user.openid)

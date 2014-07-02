@@ -103,7 +103,7 @@ class WechatHandler(tornado.web.RequestHandler):
                     self.finish()
                 except NoResultFound:
                     self.write(self.wx.response_text_msg(
-                        u'<a href="%s/register/%s">=。= 不如先绑定一下？</a>' % (
+                        u'<a href="%s/register/%s">=。= 不如先点我绑定一下？</a>' % (
                             LOCAL, self.wx.openid)))
                     self.finish()
             elif self.wx.msg_type == 'event':
@@ -117,7 +117,7 @@ class WechatHandler(tornado.web.RequestHandler):
                     self.finish()
                 except NoResultFound:
                     self.write(self.wx.response_text_msg(
-                        u'<a href="%s/register/%s">=。= 不如先绑定一下？</a>' % (
+                        u'<a href="%s/register/%s">=。= 不如先点我绑定一下？</a>' % (
                             LOCAL, self.wx.openid)))
                     self.finish()
             else:
