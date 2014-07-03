@@ -100,6 +100,9 @@ def gpa(db, user):
 
 def srtp(db, user):
     client = HTTPClient()
+    if not user.number:
+        return u'<a href="%s/register/%s">=。= 同学，你学号填错了吧，快点我修改。</a>' % (
+            LOCAL, user.openid)
     params = urllib.urlencode({
         'number': user.number
     })

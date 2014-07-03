@@ -112,7 +112,12 @@ class Message(object):
             return 'change-user'
         elif u'换人' in content:
             return 'change-user'
-        return 'nothing'
+        elif u'说明' in content:
+            return 'help'
+        elif u'怎么用' in content:
+            return 'help'
+        else:
+            return 'nothing'
 
     @property
     def openid(self):

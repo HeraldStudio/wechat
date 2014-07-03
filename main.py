@@ -71,7 +71,8 @@ class WechatHandler(tornado.web.RequestHandler):
             'update-srtp': self.update_srtp,
             'play': self.play,
             'change-user': self.change_user,
-            'nothing': self.help
+            'help': self.help,
+            'nothing': self.nothing
         }
 
     def on_finish(self):
@@ -188,8 +189,11 @@ class WechatHandler(tornado.web.RequestHandler):
 
     def help(self, user):
         msg = u'<a href="http://mp.weixin.qq.com/s?__biz=MjM5NDI3NDc2MQ==\
-&mid=200984232&idx=1&sn=ec01bf7cce773f47be60b185382c3cec#rd"> =。= 点我查看使用说明 </a>'
+&mid=200985640&idx=1&sn=5e9e4c9d18aba201af7ee07e054c7501#rd"> =。= 点我查看使用说明 </a>'
         self.write(self.wx.response_text_msg(msg))
+
+    def nothing(self, user):
+        pass
 
 if __name__ == '__main__':
     tornado.options.parse_command_line()
