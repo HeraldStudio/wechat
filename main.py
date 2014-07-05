@@ -13,6 +13,7 @@ from mod.units.gpa_handler import GPAHandler
 from mod.units.srtp_handler import SRTPHandler
 from mod.units import update
 from mod.units import get
+from mod.units import play
 from mod.models.user import User
 from mod.units.weekday import today, tomorrow
 import tornado.web
@@ -100,7 +101,10 @@ class WechatHandler(tornado.web.RequestHandler):
                 try:
                     user = self.db.query(User).filter(
                         User.openid == self.wx.openid).one()
-                    self.unitsmap[self.wx.content](user)
+                    if user.state == 0:
+                        self.unitsmap[self.wx.content](user)
+                    elif user.state == 1:
+                        self.simsimi(self.wx.raw_content)
                     self.finish()
                 except NoResultFound:
                     self.write(self.wx.response_text_msg(
@@ -178,7 +182,11 @@ class WechatHandler(tornado.web.RequestHandler):
 
     # 调戏
     def play(self, user):
-        msg = u'=。= 暂不接受调戏'
+        msg = play.update(self.db, user)  # u'=。= 暂不接受调戏'
+        self.write(self.wx.response_text_msg(msg))
+
+    def simsimi(self, content):
+        msg = play.simsimi(content)
         self.write(self.wx.response_text_msg(msg))
 
     # 其他

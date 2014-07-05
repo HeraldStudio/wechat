@@ -52,6 +52,10 @@ class Message(object):
         return self.msg.get('EventKey', None)
 
     @property
+    def raw_content(self):
+        return self.msg.get('Content', None)
+
+    @property
     def content(self):
         content = self.msg.get('Content', None)
         if u'更新' in content:

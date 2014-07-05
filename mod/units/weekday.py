@@ -9,4 +9,4 @@ def today():
 
 
 def tomorrow():
-    return strftime('%a', localtime(time() + 32 * 3600))
+    return strftime('%a', localtime(time() + 36 * 3600))
