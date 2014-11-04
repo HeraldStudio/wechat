@@ -39,9 +39,14 @@
                     "key": "pe"
                 },
                 {
-                    "type": "view",
-                    "name": "树洞",
-                    "url": "http://herald.seu.edu.cn/treehole/"
+                    "type": "click",
+                    "name": "人文讲座",
+                    "url": "lecture"
+                },
+                {
+                    "type": "click",
+                    "name": "一卡通",
+                    "url": "card"
                 },
                 {
                     "type": "view",
@@ -75,8 +80,8 @@
                 },
                 {
                     "type": "click",
-                    "name": "切换用户",
-                    "key": "change-user"
+                    "name": "校园网",
+                    "key": "nic"
                 },
                 {
                     "type": "view",

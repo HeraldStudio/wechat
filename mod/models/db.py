@@ -5,7 +5,7 @@
 DB_HOST = ''
 DB_USER = ''
 DB_PWD = ''
-DB_NAME = ''
+DB_NAME = 'herald_wechat2'
 
 from sqlalchemy import create_engine
 

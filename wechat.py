@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # @Date    : 2014-06-28 13:21:55
-# @Author  : xindervella@gamil.com
+# @Author  : xindervella@gamil.com yml_bright@163.com
 import hashlib
 import time
 import xml.etree.ElementTree as ET
@@ -116,6 +116,22 @@ class Message(object):
             return 'change-user'
         elif u'换人' in content:
             return 'change-user'
+        elif u'人文' in content:
+            return 'lecture'
+        elif u'讲座' in content:
+            return 'lecture'
+        elif u'流量' in content:
+            return 'nic'
+        elif u'网络' in content:
+            return 'nic'
+        elif u'Web' in content:
+            return 'nic'
+        elif u'web' in content:
+            return 'nic'
+        elif u'一卡通' in content:
+            return 'card'
+        elif u'余额' in content:
+            return 'card'
         elif u'说明' in content:
             return 'help'
         elif u'怎么用' in content:

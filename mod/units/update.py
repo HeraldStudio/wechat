@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # @Date    : 2014-06-29 22:01:21
-# @Author  : xindervella@gamil.com
+# @Author  : xindervella@gamil.com yml_bright@163.com
 
 from tornado.httpclient import HTTPRequest, HTTPClient
 from sqlalchemy.orm.exc import NoResultFound
-from config import SERVICE, TERM, TIME_OUT, LOCAL
+from config import SERVICE, TIME_OUT, LOCAL
 from ..models.course import Course
 from ..models.gpa import Overview as GPAO, Detail as GPAD
 from ..models.srtp import Overview as SRTPO, Detail as SRTPD
@@ -15,8 +15,7 @@ import json
 def curriculum(db, user):
     client = HTTPClient()
     params = urllib.urlencode({
-        'cardnum': user.cardnum,
-        'term': TERM
+        'uuid': user.uuid,
     })
 
     request = HTTPRequest(SERVICE + 'curriculum', method='POST',
@@ -51,8 +50,7 @@ def curriculum(db, user):
 def gpa(db, user):
     client = HTTPClient()
     params = urllib.urlencode({
-        'username': user.cardnum,
-        'password': user.password
+        'uuid': user.uuid,
     })
     request = HTTPRequest(SERVICE + 'gpa', method='POST',
                           body=params, request_timeout=TIME_OUT)
@@ -100,11 +98,8 @@ def gpa(db, user):
 
 def srtp(db, user):
     client = HTTPClient()
-    if not user.number:
-        return u'<a href="%s/register/%s">=。= 同学，你学号填错了吧，快点我修改。</a>' % (
-            LOCAL, user.openid)
     params = urllib.urlencode({
-        'number': user.number
+        'uuid': user.uuid,
     })
     request = HTTPRequest(SERVICE + 'srtp', method='POST',
                           body=params, request_timeout=TIME_OUT)

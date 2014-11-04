@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # @Date    : 2014-07-05 22:43:49
-# @Author  : xindervella@gamil.com
+# @Author  : xindervella@gamil.com yml_bright@163.com
 from tornado.httpclient import HTTPRequest, HTTPClient
 from config import SERVICE, TIME_OUT
 import urllib
@@ -26,7 +26,7 @@ def update(db, user):
             return u'T T 出了点小问题，要不你再试试？'
 
 
-def simsimi(content):
+def simsimi(content, user):
     client = HTTPClient()
     params = urllib.urlencode({
         'msg': content.encode('utf-8')

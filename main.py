@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # @Date    : 2014-06-28 13:16:23
-# @Author  : xindervella@gamil.com
+# @Author  : xindervella@gamil.com yml_bright@163.com
 
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.orm.exc import NoResultFound
@@ -32,12 +32,12 @@ class Application(tornado.web.Application):
 
     def __init__(self):
         handlers = [
-            (r'/wechat/', WechatHandler),
-            (r'/wechat/register/([\S]+)', UserHandler),
-            (r'/wechat/curriculum/([\S]+)', CurriculumHandler),
-            (r'/wechat/renew/([\S]+)/([\S]+)', RenewHandler),
-            (r'/wechat/gpa/([\S]+)', GPAHandler),
-            (r'/wechat/srtp/([\S]+)', SRTPHandler),
+            (r'/wechat2/', WechatHandler),
+            (r'/wechat2/register/([\S]+)', UserHandler),
+            (r'/wechat2/curriculum/([\S]+)', CurriculumHandler),
+            (r'/wechat2/renew/([\S]+)/([\S]+)', RenewHandler),
+            (r'/wechat2/gpa/([\S]+)', GPAHandler),
+            (r'/wechat2/srtp/([\S]+)', SRTPHandler),
 
         ]
         settings = dict(
@@ -73,6 +73,9 @@ class WechatHandler(tornado.web.RequestHandler):
             'play': self.play,
             'change-user': self.change_user,
             'help': self.help,
+            'nic': self.nic,
+            'card': self.card,
+            'lecture': self.lecture,
             'nothing': self.nothing
         }
 
@@ -80,7 +83,7 @@ class WechatHandler(tornado.web.RequestHandler):
         self.db.close()
 
     def get(self):
-        self.wx = wechat.Message(token='xindervella')
+        self.wx = wechat.Message(token='bright')
         if self.wx.check_signature(self.get_argument('signature', default=''),
                                    self.get_argument('timestamp', default=''),
                                    self.get_argument('nonce', default='')):
@@ -104,7 +107,7 @@ class WechatHandler(tornado.web.RequestHandler):
                     if user.state == 0:
                         self.unitsmap[self.wx.content](user)
                     elif user.state == 1:
-                        self.simsimi(self.wx.raw_content)
+                        self.simsimi(self.wx.raw_content, user)
                     self.finish()
                 except NoResultFound:
                     self.write(self.wx.response_text_msg(
@@ -185,9 +188,26 @@ class WechatHandler(tornado.web.RequestHandler):
         msg = play.update(self.db, user)  # u'=。= 暂不接受调戏'
         self.write(self.wx.response_text_msg(msg))
 
-    def simsimi(self, content):
-        msg = play.simsimi(content)
+    def simsimi(self, content, user):
+        msg = play.simsimi(content, user)
         self.write(self.wx.response_text_msg(msg))
+
+    #一卡通
+    def card(self, user):
+        msg = get.card(user)
+        self.write(self.wx.response_text_msg(msg))
+
+    #人文讲座
+    def lecture(self, user):
+        msg = get.lecture(user)
+        self.write(self.wx.response_text_msg(msg))
+
+    #校园网
+    def nic(self, user):
+        msg = get.nic(user)
+        self.write(self.wx.response_text_msg(msg))
+
+
 
     # 其他
     def change_user(self, user):

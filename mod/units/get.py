@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # @Date    : 2014-07-01 21:26:10
-# @Author  : xindervella@gamil.com
+# @Author  : xindervella@gamil.com yml_bright@163.com
 from tornado.httpclient import HTTPRequest, HTTPClient
 from ..models.course import Course
 from ..models.gpa import Overview as GPAO
@@ -30,13 +30,8 @@ def curriculum(db, user, day):
 
 def pe_counts(user):
     client = HTTPClient()
-    if user.pe_password:
-        pwd = user.pe_password
-    else:
-        pwd = user.cardnum
     params = urllib.urlencode({
-        'cardnum': user.cardnum,
-        'pwd': pwd
+        'uuid': user.uuid
     })
     request = HTTPRequest(SERVICE + 'pe', method='POST',
                           body=params, request_timeout=TIME_OUT)
@@ -133,3 +128,70 @@ def srtp(db, user):
             LOCAL, user.openid)
     finally:
         return msg
+
+def lecture(user):
+    client = HTTPClient()
+    params = urllib.urlencode({'uuid': user.uuid})
+    request = HTTPRequest(SERVICE + 'lecture', method='POST',
+                          body=params, request_timeout=TIME_OUT)
+    try:
+        response = client.fetch(request)
+    except:
+        return u'=。= 暂时无法连接，不如待会再试试吧'
+    if response.body == 'time out':
+        return u'=。= 暂时无法连接，不如待会再试试吧'
+    elif response.body == 'wrong card number or password':
+        return u'<a href="%s/register/%s">=。= 同学，密码错了吧，快点我重新绑定。</a>' % (
+            LOCAL, user.openid)
+    else:
+        try:
+            ret = json.loads(response.body)
+            return u'当前人文讲座次数 %s 次' % ret['count']
+        except:
+            return u'=。= 出了点故障，不如待会再试试吧'
+
+def nic(user):
+    client = HTTPClient()
+    params = urllib.urlencode({'uuid': user.uuid})
+    request = HTTPRequest(SERVICE + 'nic', method='POST',
+                          body=params, request_timeout=TIME_OUT)
+    try:
+        response = client.fetch(request)
+    except:
+        return u'=。= 暂时无法连接，不如待会再试试吧'
+    if response.body == 'time out':
+        return u'=。= 暂时无法连接，不如待会再试试吧'
+    elif response.body == 'wrong card number or password':
+        return u'<a href="%s/register/%s">=。= 同学，密码错了吧，快点我重新绑定。</a>' % (
+            LOCAL, user.openid)
+    else:
+        try:
+            ret = json.loads(response.body)
+            return u'卡钱包余额:%s\n流量使用情况:\n brasa[%s]:%s\n brasb[%s]:%s\n web[%s]:%s' % (\
+                ret['left'], 
+                ret['a']['state'], ret['a']['used'],
+                ret['b']['state'], ret['b']['used'],
+                ret['web']['state'], ret['web']['used'])
+        except:
+            return u'=。= 出了点故障，不如待会再试试吧'
+
+def card(user):
+    client = HTTPClient()
+    params = urllib.urlencode({'uuid': user.uuid})
+    request = HTTPRequest(SERVICE + 'card', method='POST',
+                          body=params, request_timeout=TIME_OUT)
+    try:
+        response = client.fetch(request)
+    except:
+        return u'=。= 暂时无法连接，不如待会再试试吧'
+    if response.body == 'time out':
+        return u'=。= 暂时无法连接，不如待会再试试吧'
+    elif response.body == 'wrong card number or password':
+        return u'<a href="%s/register/%s">=。= 同学，密码错了吧，快点我重新绑定。</a>' % (
+            LOCAL, user.openid)
+    else:
+        try:
+            ret = json.loads(response.body)
+            return u'一卡通余额:%s' % ret['left']
+        except:
+            return u'=。= 出了点故障，不如待会再试试吧'
