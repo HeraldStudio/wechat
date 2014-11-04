@@ -17,10 +17,8 @@ class User(Base):
     pe_password = Column(String(50), nullable=True)
     lib_username = Column(String(50), nullable=True)
     lib_password = Column(String(50), nullable=True)
+    uuid = Column(String(50), nullable=True)
     state = Column(Integer, nullable=False)
-
-    def __repr__(self):
-        return '<User (%s, %s)>' % (self.openid, self.cardnum)
 
 
 def create_all():

@@ -14,7 +14,7 @@ class UserHandler(tornado.web.RequestHandler):
         return self.application.db
 
     def get(self, openid):
-        self.render('register.html', openid=openid)
+        self.render('auth.html')
 
     @tornado.web.asynchronous
     def post(self, openid):
