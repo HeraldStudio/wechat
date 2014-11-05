@@ -6,8 +6,6 @@ APPID = ''
 
 AUTH = 'http://121.248.63.105/uc/'
 SERVICE = 'http://121.248.63.105/api/'
-RENEW = 'http://121.248.63.105/herald_web_service/library/renew/'
-LIBRARY = 'http://121.248.63.105/herald_web_service/library/rendered_books/'
 LOCAL = u'http://121.248.63.105/wechat2'
 
 TIME_OUT = 7

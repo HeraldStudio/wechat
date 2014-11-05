@@ -54,19 +54,16 @@ def pe_counts(user):
 
 def rendered(user):
     client = HTTPClient()
-    params = urllib.urlencode({
-        'username': user.lib_username,
-        'password': user.lib_password
-    })
-    request = HTTPRequest(LIBRARY, method='POST', body=params,
+    params = urllib.urlencode({'uuid': user.uuid})
+    request = HTTPRequest(SERVICE + 'library', method='POST', body=params,
                           request_timeout=TIME_OUT)
     try:
         response = client.fetch(request)
     except:
-        return u'=。= 图书馆暂时无法连接，不如待会再试试'
-    if response.body == 'server error':
-        return u'=。= 图书馆暂时无法连接，不如待会再试试'
-    elif response.body == 'username or password error':
+        return u'=。= 暂时无法连接，不如待会再试试'
+    if response.body == 'error':
+        return u'=。= 暂时无法连接，不如待会再试试'
+    elif response.body == 'wrong card number or password':
         return u'<a href="%s/register/%s">=。= 同学，用户名/密码错了吧，快点我重新绑定。</a>' % (
             LOCAL, user.openid)
     else:
@@ -91,7 +88,7 @@ def rendered(user):
                 msg += u'如果要续借的话请戳书名'
             return msg.strip()
         except:
-            return u'=。= 图书馆暂时无法连接，不如待会再试试'
+            return u'=。= 暂时无法连接，不如待会再试试'
 
 
 def gpa(db, user):
