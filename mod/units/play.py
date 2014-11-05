@@ -29,6 +29,7 @@ def update(db, user):
 def simsimi(content, user):
     client = HTTPClient()
     params = urllib.urlencode({
+        'uuid': user.uuid,
         'msg': content.encode('utf-8')
     })
     request = HTTPRequest(SERVICE + 'simsimi', method='POST',
