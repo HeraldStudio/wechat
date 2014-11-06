@@ -161,7 +161,11 @@ def lecture(user):
     else:
         try:
             ret = json.loads(response.body)
-            return u'当前人文讲座次数 %s 次' % ret['count']
+            msg = u""
+            for d in ret['detial']:
+                msg += u"%s\n%s\n\n"%(d['date'], d['place'])
+            msg += u'当前人文讲座次数 %s 次' % ret['count']
+            return msg
         except:
             return u'=。= 出了点故障，不如待会再试试吧'
 
