@@ -2,9 +2,11 @@
 # @Date    : 2014-07-01 21:26:10
 # @Author  : xindervella@gamil.com yml_bright@163.com
 from tornado.httpclient import HTTPRequest, HTTPClient
+from sqlalchemy.sql import or_
 from ..models.course import Course
 from ..models.gpa import Overview as GPAO
 from ..models.srtp import Overview as SRTPO
+from weekday import today, tomorrow
 from config import LOCAL, SERVICE, LIBRARY, TIME_OUT
 import urllib
 import json
@@ -19,6 +21,22 @@ def curriculum(db, user, day):
     for course in courses:
         msg += course.course + u'\n' + \
             '   '.join(p.split(course.period)).strip() + u'\n' + \
+            '   '.join(p.split(course.place)).strip() + u'\n\n'
+    if not msg:
+        msg = u'没课哦'
+    msg = msg.strip() + '\n\n' + \
+        u'<a href="%s/curriculum/%s">查看课表</a>' % (
+            LOCAL, user.openid)
+    return msg
+
+def new_curriculum(db, user):
+    courses = db.query(Course).filter(
+        Course.openid == user.openid, or_(Course.day == today(), Course.day == tomorrow())).all()
+    p = re.compile(r'\[|\]|\(|\)')
+    msg = u''
+    for course in courses:
+        msg += course.course + u'\n' + \
+            '   '.join(p.split(course.period)).strip() + u'  ' + course.day + u'\n' + \
             '   '.join(p.split(course.place)).strip() + u'\n\n'
     if not msg:
         msg = u'没课哦'

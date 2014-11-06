@@ -25,7 +25,7 @@ import wechat
 import os
 
 from tornado.options import define, options
-define('port', default=7000, help='run on the given port', type=int)
+define('port', default=700, help='run on the given port', type=int)
 
 
 class Application(tornado.web.Application):
@@ -64,6 +64,7 @@ class WechatHandler(tornado.web.RequestHandler):
             'update-curriculum': self.update_curriculum,
             'today-curriculum': self.today_curriculum,
             'tomorrow-curriculum': self.tomorrow_curriculum,
+            'new-curriculum': self.new_curriculum,
             'pe': self.pe_counts,
             'library': self.rendered,
             'gpa': self.gpa,
@@ -93,7 +94,7 @@ class WechatHandler(tornado.web.RequestHandler):
 
     @tornado.web.asynchronous
     def post(self):
-        self.wx = wechat.Message(token='xindervella')
+        self.wx = wechat.Message(token='bright')
         if self.wx.check_signature(self.get_argument('signature', default=''),
                                    self.get_argument('timestamp', default=''),
                                    self.get_argument('nonce', default='')):
@@ -148,6 +149,10 @@ class WechatHandler(tornado.web.RequestHandler):
 
     def tomorrow_curriculum(self, user):
         msg = get.curriculum(self.db, user, tomorrow())
+        self.write(self.wx.response_text_msg(msg))
+
+    def new_curriculum(self, user):
+        msg = get.new_curriculum(self.db, user)
         self.write(self.wx.response_text_msg(msg))
 
     # 跑操

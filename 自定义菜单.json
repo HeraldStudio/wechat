@@ -1,17 +1,17 @@
 {
     "button": [
         {
-            "name": "么",
+            "name": "呵",
             "sub_button": [
                 {
                     "type": "click",
-                    "name": "今天课表",
-                    "key": "today-curriculum"
+                    "name": "课表",
+                    "key": "new-curriculum"
                 },
                 {
                     "type": "click",
-                    "name": "明天课表",
-                    "key": "tomorrow-curriculum"
+                    "name": "校园网",
+                    "key": "nic"
                 },
                 {
                     "type": "click",
@@ -31,7 +31,7 @@
             ]
         },
         {
-            "name": "么",
+            "name": "呵",
             "sub_button": [
                 {
                     "type": "click",
@@ -80,8 +80,8 @@
                 },
                 {
                     "type": "click",
-                    "name": "校园网",
-                    "key": "nic"
+                    "name": "切换用户",
+                    "key": "change-user"
                 },
                 {
                     "type": "view",
