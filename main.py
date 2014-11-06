@@ -190,7 +190,7 @@ class WechatHandler(tornado.web.RequestHandler):
 
     def simsimi(self, content, user):
         msg = play.simsimi(content, user)
-        self.write(self.wx.response_text_msg(msg))
+        self.write(self.wx.response_text_msg(msg.decode('utf-8')))
 
     #一卡通
     def card(self, user):

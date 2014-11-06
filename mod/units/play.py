@@ -5,7 +5,6 @@ from tornado.httpclient import HTTPRequest, HTTPClient
 from config import SERVICE, TIME_OUT
 import urllib
 
-
 def update(db, user):
 
     if user.state == 0:
@@ -30,7 +29,7 @@ def simsimi(content, user):
     client = HTTPClient()
     params = urllib.urlencode({
         'uuid': user.uuid,
-        'msg': content.encode('utf-8')
+        'msg': content
     })
     request = HTTPRequest(SERVICE + 'simsimi', method='POST',
                           body=params, request_timeout=TIME_OUT)
