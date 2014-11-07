@@ -29,7 +29,7 @@ def simsimi(content, user):
     client = HTTPClient()
     params = urllib.urlencode({
         'uuid': user.uuid,
-        'msg': content
+        'msg': content.encode('utf-8')
     })
     request = HTTPRequest(SERVICE + 'simsimi', method='POST',
                           body=params, request_timeout=TIME_OUT)
@@ -40,7 +40,7 @@ def simsimi(content, user):
     if response.body == 'time out':
         return u'=。= 出了点小问题啊'
     elif response.body == 'error':
-        return u'=。= 我看不懂你说什么'
+        return u'=。= 坏掉了'
     else:
         msg = ''.join(response.body.split(' '))
         return msg

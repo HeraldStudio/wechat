@@ -25,7 +25,7 @@ import wechat
 import os
 
 from tornado.options import define, options
-define('port', default=700, help='run on the given port', type=int)
+define('port', default=7200, help='run on the given port', type=int)
 
 
 class Application(tornado.web.Application):
@@ -195,7 +195,10 @@ class WechatHandler(tornado.web.RequestHandler):
 
     def simsimi(self, content, user):
         msg = play.simsimi(content, user)
-        self.write(self.wx.response_text_msg(msg.decode('utf-8')))
+        try:
+            self.write(self.wx.response_text_msg(msg.decode('utf-8')))
+        except:
+            self.write(self.wx.response_text_msg(msg))
 
     #一卡通
     def card(self, user):
