@@ -41,12 +41,12 @@
                 {
                     "type": "click",
                     "name": "人文讲座",
-                    "url": "lecture"
+                    "key": "lecture"
                 },
                 {
                     "type": "click",
                     "name": "一卡通",
-                    "url": "card"
+                    "key": "card"
                 },
                 {
                     "type": "view",
