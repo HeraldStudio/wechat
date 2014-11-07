@@ -42,5 +42,4 @@ def simsimi(content, user):
     elif response.body == 'error':
         return u'=。= 坏掉了'
     else:
-        msg = ''.join(response.body.split(' '))
-        return msg
+        return response.body
