@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # @Date    : 2014-06-30 19:28:08
 # @Author  : xindervella@gamil.com yml_bright@163.com
-from tornado.httpclient import HTTPRequest, AsyncHTTPClient
+from tornado.httpclient import HTTPRequest, AsyncHTTPClient, HTTPError
 from config import SERVICE, TIME_OUT
 from sqlalchemy.orm.exc import NoResultFound
 from ..models.user import User
@@ -44,6 +44,8 @@ class RenewHandler(tornado.web.RequestHandler):
                 else:
                     self.write(TEMPLATE.format(content='现在不是可以续借的时间哦'))
         except NoResultFound:
+            self.write('access verification fail')
+        except HTTPError:
             self.write('access verification fail')
         finally:
             self.finish()

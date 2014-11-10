@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # @Date    : 2014-07-01 21:26:10
 # @Author  : xindervella@gamil.com yml_bright@163.com
-from tornado.httpclient import HTTPRequest, HTTPClient
+from tornado.httpclient import HTTPRequest, HTTPClient, HTTPError
 from sqlalchemy.sql import or_
 from ..models.course import Course
 from ..models.gpa import Overview as GPAO
@@ -55,6 +55,8 @@ def pe_counts(user):
                           body=params, request_timeout=TIME_OUT)
     try:
         response = client.fetch(request)
+    except HTTPError:
+        self.write('<a href="%s/register/%s">你不是把一卡通密码输错了吧，快点我修改。</a>')
     except:
         return u'=。= 体育系暂时无法连接，不如待会再试试吧'
     if response.body == 'time out':
@@ -77,6 +79,8 @@ def rendered(user):
                           request_timeout=TIME_OUT)
     try:
         response = client.fetch(request)
+    except HTTPError:
+        self.write('<a href="%s/register/%s">你不是把一卡通密码输错了吧，快点我修改。</a>')
     except:
         return u'=。= 暂时无法连接，不如待会再试试'
     if response.body == 'error':
@@ -151,6 +155,8 @@ def lecture(user):
                           body=params, request_timeout=TIME_OUT)
     try:
         response = client.fetch(request)
+    except HTTPError:
+        self.write('<a href="%s/register/%s">你不是把一卡通密码输错了吧，快点我修改。</a>')
     except:
         return u'=。= 暂时无法连接，不如待会再试试吧'
     if response.body == 'time out':
@@ -176,6 +182,8 @@ def nic(user):
                           body=params, request_timeout=TIME_OUT)
     try:
         response = client.fetch(request)
+    except HTTPError:
+        self.write('<a href="%s/register/%s">你不是把一卡通密码输错了吧，快点我修改。</a>')
     except:
         return u'=。= 暂时无法连接，不如待会再试试吧'
     if response.body == 'time out':
@@ -201,6 +209,8 @@ def card(user):
                           body=params, request_timeout=TIME_OUT)
     try:
         response = client.fetch(request)
+    except HTTPError:
+        self.write('<a href="%s/register/%s">你不是把一卡通密码输错了吧，快点我修改。</a>')
     except:
         return u'=。= 暂时无法连接，不如待会再试试吧'
     if response.body == 'time out':
