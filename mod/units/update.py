@@ -23,7 +23,8 @@ def curriculum(db, user):
     try:
         response = client.fetch(request)
     except HTTPError:
-        self.write('<a href="%s/register/%s">你不是把一卡通密码输错了吧，快点我修改。</a>')
+        return u'<a href="%s/register/%s">你不是把一卡通密码输错了吧，快点我修改。</a>' % (
+            LOCAL, user.openid)
     except:
         return u'=。= 由于网络状况更新失败，不如待会再试试'
     if response.body == 'time out':
@@ -59,7 +60,8 @@ def gpa(db, user):
     try:
         response = client.fetch(request)
     except HTTPError:
-        self.write('<a href="%s/register/%s">你不是把一卡通密码输错了吧，快点我修改。</a>')
+        return u'<a href="%s/register/%s">你不是把一卡通密码输错了吧，快点我修改。</a>' % (
+            LOCAL, user.openid)
     except:
         return u'=。= 由于网络状况更新失败，不如待会再试试'
     if response.body == 'time out':
@@ -110,7 +112,8 @@ def srtp(db, user):
     try:
         response = client.fetch(request)
     except HTTPError:
-        self.write('<a href="%s/register/%s">你不是把一卡通密码输错了吧，快点我修改。</a>')
+        return u'<a href="%s/register/%s">你不是把一卡通密码输错了吧，快点我修改。</a>' % (
+            LOCAL, user.openid)
     except:
         return u'=。= 由于网络状况更新失败，不如待会再试试'
     if response.body == 'time out':

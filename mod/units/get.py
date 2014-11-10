@@ -56,7 +56,8 @@ def pe_counts(user):
     try:
         response = client.fetch(request)
     except HTTPError:
-        self.write('<a href="%s/register/%s">你不是把一卡通密码输错了吧，快点我修改。</a>')
+        return u'<a href="%s/register/%s">你不是把一卡通密码输错了吧，快点我修改。</a>' % (
+            LOCAL, user.openid)
     except:
         return u'=。= 体育系暂时无法连接，不如待会再试试吧'
     if response.body == 'time out':
@@ -80,7 +81,8 @@ def rendered(user):
     try:
         response = client.fetch(request)
     except HTTPError:
-        self.write('<a href="%s/register/%s">你不是把一卡通密码输错了吧，快点我修改。</a>')
+        return u'<a href="%s/register/%s">你不是把一卡通密码输错了吧，快点我修改。</a>' % (
+            LOCAL, user.openid)
     except:
         return u'=。= 暂时无法连接，不如待会再试试'
     if response.body == 'error':
@@ -156,7 +158,8 @@ def lecture(user):
     try:
         response = client.fetch(request)
     except HTTPError:
-        self.write('<a href="%s/register/%s">你不是把一卡通密码输错了吧，快点我修改。</a>')
+        return u'<a href="%s/register/%s">你不是把一卡通密码输错了吧，快点我修改。</a>' % (
+            LOCAL, user.openid)
     except:
         return u'=。= 暂时无法连接，不如待会再试试吧'
     if response.body == 'time out':
@@ -183,7 +186,8 @@ def nic(user):
     try:
         response = client.fetch(request)
     except HTTPError:
-        self.write('<a href="%s/register/%s">你不是把一卡通密码输错了吧，快点我修改。</a>')
+        return u'<a href="%s/register/%s">你不是把一卡通密码输错了吧，快点我修改。</a>' % (
+            LOCAL, user.openid)
     except:
         return u'=。= 暂时无法连接，不如待会再试试吧'
     if response.body == 'time out':
@@ -210,7 +214,8 @@ def card(user):
     try:
         response = client.fetch(request)
     except HTTPError:
-        self.write('<a href="%s/register/%s">你不是把一卡通密码输错了吧，快点我修改。</a>')
+        return u'<a href="%s/register/%s">你不是把一卡通密码输错了吧，快点我修改。</a>' % (
+            LOCAL, user.openid)
     except:
         return u'=。= 暂时无法连接，不如待会再试试吧'
     if response.body == 'time out':
