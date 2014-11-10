@@ -101,6 +101,7 @@ class WechatHandler(tornado.web.RequestHandler):
             self.wx.parse_msg(self.request.body)
             if self.wx.msg_type == 'event' and self.wx.event == 'subscribe':
                 self.write(self.wx.response_text_msg('welcome'))
+                self.finish()
             elif self.wx.msg_type == 'text':
                 try:
                     user = self.db.query(User).filter(

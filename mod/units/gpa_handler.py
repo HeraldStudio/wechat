@@ -24,6 +24,7 @@ class GPAHandler(tornado.web.RequestHandler):
                 item.score_type, item.extra])
 
         self.render('gpa.html', detail=detail)
+        self.finish()
 
     def on_finish(self):
         self.db.close()
