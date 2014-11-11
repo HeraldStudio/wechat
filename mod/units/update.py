@@ -34,7 +34,10 @@ def curriculum(db, user):
             LOCAL, user.openid)
     else:
         courses = db.query(Course).filter(Course.openid == user.openid).all()
-        curriculum = json.loads(response.body)
+        try:
+            curriculum = json.loads(response.body)
+        except:
+            return u'=。= 返回数据包错误，不如待会再试试, 或者直接联系我们 yml_bright@163.com'
         for course in courses:
             db.delete(course)
         for day, items in curriculum.items():
@@ -69,12 +72,15 @@ def gpa(db, user):
         return u'=。= 由于网络状况更新失败，不如待会再试试'
     if response.body == 'time out':
         return u'=。= 由于网络状况更新失败，不如待会再试试'
-    elif response.body == u'wrong username or password':
+    elif response.body == 'wrong username or password':
         return u'<a href="%s/register/%s">居然没有绩点你敢信？你不是把一卡通/\
 密码输错了吧，快点我修改。</a>' % (LOCAL, user.openid)
 
     else:
-        gpa = json.loads(response.body)
+        try:
+            gpa = json.loads(response.body)
+        except:
+            return u'=。= 返回数据包错误，不如待会再试试, 或者直接联系我们 yml_bright@163.com'
         try:
             overview = db.query(GPAO).filter(GPAO.openid == user.openid).one()
             overview.gpa = gpa[0]['gpa']
