@@ -17,7 +17,7 @@ class SRTPHandler(tornado.web.RequestHandler):
                    item.project_type, item.total_credit, item.credit,
                    item.proportion] for item in items]
         self.render('srtp.html', detail=detail)
-        self.finish()
+        self.db.close()
 
     def on_finish(self):
         self.db.close()

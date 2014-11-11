@@ -63,6 +63,13 @@ class UserHandler(tornado.web.RequestHandler):
                 }
                 newUser = True
             finally:
+                try:
+                    x = urllib.urlencode(data)
+                except:
+                    self.write('=.= 输入了非法字符')
+                    self.finish()
+                    self.db.close()
+                    return
                 if self.update_info(data):
                     uuid = self.auth(data)
                     if uuid:
