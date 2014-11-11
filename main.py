@@ -225,8 +225,7 @@ class WechatHandler(tornado.web.RequestHandler):
         self.write(self.wx.response_text_msg(msg))
 
     def help(self, user):
-        msg = u'<a href="http://mp.weixin.qq.com/s?__biz=MjM5NDI3NDc2MQ==\
-&mid=200985640&idx=1&sn=5e9e4c9d18aba201af7ee07e054c7501#rd"> =。= 点我查看使用说明 </a>'
+        msg = u'<a href="http://mp.weixin.qq.com/s?__biz=MjM5NDI3NDc2MQ==&mid=202009235&idx=1&sn=6659475ca9c4afd40c46b32c6a45ecb2#rd"> =。= 点我查看使用说明 </a>'
         self.write(self.wx.response_text_msg(msg))
 
     def nothing(self, user):
