@@ -29,6 +29,9 @@ def curriculum(db, user):
         return u'=。= 由于网络状况更新失败，不如待会再试试'
     if response.body == 'time out':
         return u'=。= 由于网络状况更新失败，不如待会再试试'
+    elif response.body == 'card number not exist':
+        return u'<a href="%s/register/%s">你不是把一卡通输错了吧，快点我修改。</a>' % (
+            LOCAL, user.openid)
     else:
         courses = db.query(Course).filter(Course.openid == user.openid).all()
         curriculum = json.loads(response.body)
@@ -66,7 +69,7 @@ def gpa(db, user):
         return u'=。= 由于网络状况更新失败，不如待会再试试'
     if response.body == 'time out':
         return u'=。= 由于网络状况更新失败，不如待会再试试'
-    elif response.body == 'wrong username or password':
+    elif response.body == u'wrong username or password':
         return u'<a href="%s/register/%s">居然没有绩点你敢信？你不是把一卡通/\
 密码输错了吧，快点我修改。</a>' % (LOCAL, user.openid)
 

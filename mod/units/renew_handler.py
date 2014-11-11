@@ -24,8 +24,7 @@ class RenewHandler(tornado.web.RequestHandler):
     def get(self, openid, barcode):
         try:
             user = self.db.query(User).filter(User.openid == openid).one()
-            self.db.close()
-
+            
             params = urllib.urlencode({
                 'uuid': user.uuid,
                 'barcode': barcode
