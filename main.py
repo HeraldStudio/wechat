@@ -198,8 +198,10 @@ class WechatHandler(tornado.web.RequestHandler):
         msg = play.simsimi(content, user)
         try:
             self.write(self.wx.response_text_msg(msg.decode('utf-8')))
-        except:
+        except UnicodeEncodeError:
             self.write(self.wx.response_text_msg(msg))
+        except:
+            self.write(self.wx.response_text_msg(u'encode error'))
 
     #一卡通
     def card(self, user):
@@ -230,7 +232,8 @@ class WechatHandler(tornado.web.RequestHandler):
         self.write(self.wx.response_text_msg(msg))
 
     def nothing(self, user):
-        pass
+        msg = u'无法识别命令，想要调戏小猴别忘了点一下[调戏],么么哒'
+        self.write(self.wx.response_text_msg(msg))
 
 if __name__ == '__main__':
     tornado.options.parse_command_line()
