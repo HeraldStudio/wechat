@@ -11,7 +11,7 @@ Base = declarative_base()
 class Course(Base):
     __tablename__ = 'course'
     id = Column(Integer, primary_key=True)
-    openid = Column(String(50), nullable=True)
+    openid = Column(String(50), nullable=True, index=True)
     course = Column(String(50), nullable=True)
     day = Column(String(50), nullable=True)
     place = Column(String(50), nullable=True)

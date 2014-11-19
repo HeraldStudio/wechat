@@ -21,7 +21,7 @@ class Overview(Base):
 class Detail(Base):
     __tablename__ = 'srtp_detail'
     id = Column(Integer, primary_key=True)
-    openid = Column(String(50), nullable=True)
+    openid = Column(String(50), nullable=True, index=True)
     project = Column(String(50), nullable=True)
     department = Column(String(50), nullable=True)
     date = Column(String(50), nullable=True)

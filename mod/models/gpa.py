@@ -22,7 +22,7 @@ class Overview(Base):
 class Detail(Base):
     __tablename__ = 'gpa_detail'
     id = Column(Integer, primary_key=True)
-    openid = Column(String(50), nullable=True)
+    openid = Column(String(50), nullable=True, index=True)
     course = Column(String(50), nullable=True)
     credit = Column(String(50), nullable=True)
     semester = Column(String(50), nullable=True)
