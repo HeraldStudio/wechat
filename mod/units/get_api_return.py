@@ -37,6 +37,6 @@ def get_api_return(api_name, user):
             ret['content'] = error_map[ret['code']]
     except:
         ret['code'] = 500
-        ret['content'] = u'=。= 未知的错误'
+        ret['content'] = u'=。= 服务器未能及时回应请求，如不再试试'
     return ret
 
