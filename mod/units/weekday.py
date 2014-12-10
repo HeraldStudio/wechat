@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # @Date    : 2014-06-29 17:16:08
-# @Author  : xindervella@gamil.com
+# @Author  : xindervella@gamil.com yml_bright@163.com
 from time import time, localtime, strftime
 
 

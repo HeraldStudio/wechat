@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 # @Date    : 2014-06-29 18:56:08
 # @Author  : xindervella@gamil.com
-# -*- coding: utf-8 -*-
-# @Date    : 2014-06-28 20:10:43
-# @Author  : xindervella@gamil.com
 
 import tornado.web
 from ..models.course import Course

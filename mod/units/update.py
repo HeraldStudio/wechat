@@ -8,36 +8,16 @@ from config import SERVICE, TIME_OUT, LOCAL
 from ..models.course import Course
 from ..models.gpa import Overview as GPAO, Detail as GPAD
 from ..models.srtp import Overview as SRTPO, Detail as SRTPD
+from get_api_return import get_api_return
 import urllib
 import json
 
 
 def curriculum(db, user):
-    client = HTTPClient()
-    params = urllib.urlencode({
-        'uuid': user.uuid,
-    })
-
-    request = HTTPRequest(SERVICE + 'curriculum', method='POST',
-                          body=params, request_timeout=TIME_OUT)
-    try:
-        response = client.fetch(request)
-    except HTTPError:
-        return u'<a href="%s/register/%s">你不是把一卡通密码输错了吧，快点我修改。</a>' % (
-            LOCAL, user.openid)
-    except:
-        return u'=。= 由于网络状况更新失败，不如待会再试试'
-    if response.body == 'time out':
-        return u'=。= 由于网络状况更新失败，不如待会再试试'
-    elif response.body == 'card number not exist':
-        return u'<a href="%s/register/%s">你不是把一卡通输错了吧，快点我修改。</a>' % (
-            LOCAL, user.openid)
-    else:
+    response = get_api_return('curriculum', user)
+    if response['code'] == 200:
         courses = db.query(Course).filter(Course.openid == user.openid).all()
-        try:
-            curriculum = json.loads(response.body)
-        except:
-            return u'=。= 返回数据包错误，不如待会再试试, 或者直接联系我们 yml_bright@163.com'
+        curriculum = response['content']
         for course in courses:
             db.delete(course)
         for day, items in curriculum.items():
@@ -54,33 +34,13 @@ def curriculum(db, user):
         except:
             db.rollback()
             return u'T T 出了点小问题'
-
+    else:
+        return response['content']
 
 def gpa(db, user):
-    client = HTTPClient()
-    params = urllib.urlencode({
-        'uuid': user.uuid,
-    })
-    request = HTTPRequest(SERVICE + 'gpa', method='POST',
-                          body=params, request_timeout=TIME_OUT)
-    try:
-        response = client.fetch(request)
-    except HTTPError:
-        return u'<a href="%s/register/%s">你不是把一卡通密码输错了吧，快点我修改。</a>' % (
-            LOCAL, user.openid)
-    except:
-        return u'=。= 由于网络状况更新失败，不如待会再试试'
-    if response.body == 'time out':
-        return u'=。= 由于网络状况更新失败，不如待会再试试'
-    elif response.body == 'wrong username or password':
-        return u'<a href="%s/register/%s">居然没有绩点你敢信？你不是把一卡通/\
-密码输错了吧，快点我修改。</a>' % (LOCAL, user.openid)
-
-    else:
-        try:
-            gpa = json.loads(response.body)
-        except:
-            return u'=。= 返回数据包错误，不如待会再试试, 或者直接联系我们 yml_bright@163.com'
+    response = get_api_return('gpa', user)
+    if response['code'] == 200:
+        gpa = response['content']
         try:
             overview = db.query(GPAO).filter(GPAO.openid == user.openid).one()
             overview.gpa = gpa[0]['gpa']
@@ -109,29 +69,13 @@ def gpa(db, user):
         except:
             db.rollback()
             return u'T T 出了点小问题'
-
+    else:
+        return response['content']
 
 def srtp(db, user):
-    client = HTTPClient()
-    params = urllib.urlencode({
-        'uuid': user.uuid,
-    })
-    request = HTTPRequest(SERVICE + 'srtp', method='POST',
-                          body=params, request_timeout=TIME_OUT)
-    try:
-        response = client.fetch(request)
-    except HTTPError:
-        return u'<a href="%s/register/%s">你不是把一卡通密码输错了吧，快点我修改。</a>' % (
-            LOCAL, user.openid)
-    except:
-        return u'=。= 由于网络状况更新失败，不如待会再试试'
-    if response.body == 'time out':
-        return u'=。= 由于网络状况更新失败，不如待会再试试'
-    elif response.body == 'number not exist':
-        return u'<a href="%s/register/%s">=。= 同学，你学号填错了吧，快点我修改。</a>' % (
-            LOCAL, user.openid)
-    else:
-        srtp = json.loads(response.body)
+    response = get_api_return('srtp', user)
+    if response['code'] == 200:
+        srtp = response['content']
         try:
             overview = db.query(SRTPO).filter(SRTPO.openid == user.openid).one()
             overview.total = srtp[0]['total']
@@ -159,3 +103,5 @@ def srtp(db, user):
         except:
             db.rollback()
             return u'T T 出了点小问题'
+    else:
+        return response['content']

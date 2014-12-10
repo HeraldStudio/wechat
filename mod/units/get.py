@@ -7,7 +7,8 @@ from ..models.course import Course
 from ..models.gpa import Overview as GPAO
 from ..models.srtp import Overview as SRTPO
 from weekday import today, tomorrow, changedate
-from config import LOCAL, SERVICE, LIBRARY, TIME_OUT
+from config import LOCAL
+from get_api_return import get_api_return
 import urllib
 import json
 import re
@@ -46,55 +47,20 @@ def new_curriculum(db, user):
             LOCAL, user.openid)
     return msg
 
-
 def pe_counts(user):
-    client = HTTPClient()
-    params = urllib.urlencode({
-        'uuid': user.uuid
-    })
-    request = HTTPRequest(SERVICE + 'pe', method='POST',
-                          body=params, request_timeout=TIME_OUT)
-    try:
-        response = client.fetch(request)
-    except HTTPError:
-        return u'<a href="%s/register/%s">你不是把一卡通密码输错了吧，快点我修改。</a>' % (
-            LOCAL, user.openid)
-    except:
-        return u'=。= 体育系暂时无法连接，不如待会再试试吧'
-    if response.body == 'time out':
-        return u'=。= 体育系暂时无法连接，不如待会再试试吧'
-    elif response.body == 'wrong card number or password':
-        return u'<a href="%s/register/%s">=。= 同学，密码错了吧，快点我重新绑定。</a>' % (
-            LOCAL, user.openid)
+    response = get_api_return('pe', user)
+    if response['code'] == 200:
+        return u'当前跑操次数 %s 次' % response['content']
     else:
-        try:
-            counts = int(response.body)
-            return u'当前跑操次数 %d 次' % counts
-        except:
-            return u'=。= 出了点故障，不如待会再试试吧'
+        return response['content']
 
 
 def rendered(user):
-    client = HTTPClient()
-    params = urllib.urlencode({'uuid': user.uuid})
-    request = HTTPRequest(SERVICE + 'library', method='POST', body=params,
-                          request_timeout=TIME_OUT)
-    try:
-        response = client.fetch(request)
-    except HTTPError:
-        return u'<a href="%s/register/%s">你不是把一卡通密码输错了吧，快点我修改。</a>' % (
-            LOCAL, user.openid)
-    except:
-        return u'=。= 暂时无法连接，不如待会再试试'
-    if response.body == 'error':
-        return u'=。= 暂时无法连接，不如待会再试试'
-    elif response.body == 'wrong card number or password':
-        return u'<a href="%s/register/%s">=。= 同学，用户名/密码错了吧，快点我重新绑定。</a>' % (
-            LOCAL, user.openid)
-    else:
-        msg = u''
+    response = get_api_return('library', user)
+    msg = u''
+    if response['code'] == 200:
         try:
-            books = json.loads(response.body)
+            books = response['content']
             for book in books:
                 detail = u'\n%s\n%s\n借书时间：%s\n到期时间：%s' % (
                     book['author'], book['place'],
@@ -113,7 +79,9 @@ def rendered(user):
                 msg += u'如果要续借的话请戳书名'
             return msg.strip()
         except:
-            return u'=。= 暂时无法连接，不如待会再试试'
+            return u'=。= 出了点故障，不如待会再试试吧'
+    else:
+        return response['content']
 
 
 def gpa(db, user):
@@ -152,81 +120,33 @@ def srtp(db, user):
         return msg
 
 def lecture(user):
-    client = HTTPClient()
-    params = urllib.urlencode({'uuid': user.uuid})
-    request = HTTPRequest(SERVICE + 'lecture', method='POST',
-                          body=params, request_timeout=TIME_OUT)
-    try:
-        response = client.fetch(request)
-    except HTTPError:
-        return u'<a href="%s/register/%s">你不是把一卡通密码输错了吧，快点我修改。</a>' % (
-            LOCAL, user.openid)
-    except:
-        return u'=。= 暂时无法连接，不如待会再试试吧'
-    if response.body == 'time out':
-        return u'=。= 暂时无法连接，不如待会再试试吧'
-    elif response.body == 'wrong card number or password':
-        return u'<a href="%s/register/%s">=。= 同学，密码错了吧，快点我重新绑定。</a>' % (
-            LOCAL, user.openid)
+    response = get_api_return('lecture', user)
+    if response['code'] == 200:
+        ret = response['content']
+        msg = u""
+        for d in ret['detial']:
+            msg += u"%s\n%s\n\n"%(d['date'], d['place'])
+        msg += u'当前人文讲座次数 %s 次' % ret['count']
+        return msg
     else:
-        try:
-            ret = json.loads(response.body)
-            msg = u""
-            for d in ret['detial']:
-                msg += u"%s\n%s\n\n"%(d['date'], d['place'])
-            msg += u'当前人文讲座次数 %s 次' % ret['count']
-            return msg
-        except:
-            return u'=。= 出了点故障，不如待会再试试吧'
+        return response['content']
 
 def nic(user):
-    client = HTTPClient()
-    params = urllib.urlencode({'uuid': user.uuid})
-    request = HTTPRequest(SERVICE + 'nic', method='POST',
-                          body=params, request_timeout=TIME_OUT)
-    try:
-        response = client.fetch(request)
-    except HTTPError:
-        return u'<a href="%s/register/%s">你不是把一卡通密码输错了吧，快点我修改。</a>' % (
-            LOCAL, user.openid)
-    except:
-        return u'=。= 暂时无法连接，不如待会再试试吧'
-    if response.body == 'time out':
-        return u'=。= 暂时无法连接，不如待会再试试吧'
-    elif response.body == 'wrong card number or password':
-        return u'<a href="%s/register/%s">=。= 同学，密码错了吧，快点我重新绑定。</a>' % (
-            LOCAL, user.openid)
-    else:
-        try:
-            ret = json.loads(response.body)
-            return u'卡钱包余额:%s\n流量使用情况:\n brasa[%s]:%s\n brasb[%s]:%s\n web[%s]:%s' % (\
+    response = get_api_return('nic', user)
+    if response['code'] == 200:
+        ret = response['content']
+        return u'卡钱包余额:%s\n流量使用情况:\n brasa[%s]:%s\n brasb[%s]:%s\n web[%s]:%s' % (\
                 ret['left'], 
                 ret['a']['state'], ret['a']['used'],
                 ret['b']['state'], ret['b']['used'],
                 ret['web']['state'], ret['web']['used'])
-        except:
-            return u'=。= 出了点故障，不如待会再试试吧'
+    else:
+        return response['content']
 
 def card(user):
-    client = HTTPClient()
-    params = urllib.urlencode({'uuid': user.uuid})
-    request = HTTPRequest(SERVICE + 'card', method='POST',
-                          body=params, request_timeout=TIME_OUT)
-    try:
-        response = client.fetch(request)
-    except HTTPError:
-        return u'<a href="%s/register/%s">你不是把一卡通密码输错了吧，快点我修改。</a>' % (
-            LOCAL, user.openid)
-    except:
-        return u'=。= 暂时无法连接，不如待会再试试吧'
-    if response.body == 'time out':
-        return u'=。= 暂时无法连接，不如待会再试试吧'
-    elif response.body == 'wrong card number or password':
-        return u'<a href="%s/register/%s">=。= 同学，密码错了吧，快点我重新绑定。</a>' % (
-            LOCAL, user.openid)
+    response = get_api_return('card', user)
+    if response['code'] == 200:
+        ret = response['content']
+        return u'一卡通余额:%s' % ret['left']
     else:
-        try:
-            ret = json.loads(response.body)
-            return u'一卡通余额:%s' % ret['left']
-        except:
-            return u'=。= 出了点故障，不如待会再试试吧'
+        return response['content']

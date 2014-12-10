@@ -5,6 +5,7 @@ from tornado.httpclient import HTTPRequest, AsyncHTTPClient, HTTPError
 from config import SERVICE, TIME_OUT
 from sqlalchemy.orm.exc import NoResultFound
 from ..models.user import User
+from get_api_return import error_map
 import tornado.web
 import tornado.gen
 import urllib
@@ -33,19 +34,18 @@ class RenewHandler(tornado.web.RequestHandler):
             request = HTTPRequest(SERVICE + 'renew', method='POST', body=params,
                                   request_timeout=TIME_OUT)
             response = yield tornado.gen.Task(client.fetch, request)
-            if (not response.headers) or response.body == 'error':
-                self.write(TEMPLATE.format(content='=。= 又宕机了，待会再试试吧'))
-            elif response.body == 'wrong card number or password':
-                self.write(TEMPLATE.format(content='=。= 同学，用户名/密码错了吧'))
-            else:
-                if response.body == 'success':
+            response = json.loads(response)
+            if response['code'] == 200:
+                if response['content'] == 'success':
                     self.write(TEMPLATE.format(content='续借成功'))
                 else:
                     self.write(TEMPLATE.format(content='现在不是可以续借的时间哦'))
+            else:
+                self.write(response['content'])
         except NoResultFound:
             self.write('access verification fail')
-        except HTTPError:
-            self.write('access verification fail')
+        except HTTPError as e:
+            self.write(error_map[e.code])
         finally:
             self.finish()
 

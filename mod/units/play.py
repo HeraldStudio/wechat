@@ -2,7 +2,8 @@
 # @Date    : 2014-07-05 22:43:49
 # @Author  : xindervella@gamil.com yml_bright@163.com
 from tornado.httpclient import HTTPRequest, HTTPClient
-from config import SERVICE, TIME_OUT
+from config import SERVICE, TIME_OUT, DEFAULT_UUID
+from get_api_return import error_map
 import urllib
 
 def update(db, user):
@@ -27,19 +28,21 @@ def update(db, user):
 
 def simsimi(content, user):
     client = HTTPClient()
+    if user.uuid:
+        uuid = user.uuid
+    else:
+        uuid = DEFAULT_UUID
     params = urllib.urlencode({
-        'uuid': user.uuid,
+        'uuid': uuid,
         'msg': content.encode('utf-8')
     })
     request = HTTPRequest(SERVICE + 'simsimi', method='POST',
                           body=params, request_timeout=TIME_OUT)
     try:
         response = client.fetch(request)
-    except:
-        return u'=。= 出了点小问题啊'
-    if response.body == 'time out':
-        return u'=。= 出了点小问题啊'
-    elif response.body == 'error':
+    except HTTPError as e:
+        return error_map[e.code]
+    if response.body == 'error':
         return u'=。= 坏掉了'
     else:
         return response.body

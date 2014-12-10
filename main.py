@@ -4,7 +4,6 @@
 
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.orm.exc import NoResultFound
-from config import LOCAL
 from mod.models.db import engine
 from mod.user.user_handler import UserHandler
 from mod.units.curriculum_handler import CurriculumHandler
@@ -16,6 +15,7 @@ from mod.units import get
 from mod.units import play
 from mod.models.user import User
 from mod.units.weekday import today, tomorrow
+from mod.units.config import LOCAL
 import tornado.web
 import tornado.ioloop
 import tornado.httpserver
