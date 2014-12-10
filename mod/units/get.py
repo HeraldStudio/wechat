@@ -6,7 +6,7 @@ from sqlalchemy.sql import or_
 from ..models.course import Course
 from ..models.gpa import Overview as GPAO
 from ..models.srtp import Overview as SRTPO
-from weekday import today, tomorrow
+from weekday import today, tomorrow, changedate
 from config import LOCAL, SERVICE, LIBRARY, TIME_OUT
 import urllib
 import json
@@ -30,13 +30,14 @@ def curriculum(db, user, day):
     return msg
 
 def new_curriculum(db, user):
+    daymap = {'Mon':u'周一', 'Tue':u'周二', 'Wed':u'周三', 'Thu':u'周四', 'Fri':u'周五', 'Sat':u'周六', 'Sun':u'周日'}
     courses = db.query(Course).filter(
-        Course.openid == user.openid, or_(Course.day == today(), Course.day == tomorrow())).all()
+        Course.openid == user.openid, Course.day == changedate()).all()
     p = re.compile(r'\[|\]|\(|\)')
     msg = u''
     for course in courses:
         msg += course.course + u'\n' + \
-            '   '.join(p.split(course.period)).strip() + u'  ' + course.day + u'\n' + \
+            '   '.join(p.split(course.period)).strip() + u'  ' + daymap[course.day] + u'\n' + \
             '   '.join(p.split(course.place)).strip() + u'\n\n'
     if not msg:
         msg = u'没课哦'

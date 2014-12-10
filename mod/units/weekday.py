@@ -5,8 +5,14 @@ from time import time, localtime, strftime
 
 
 def today():
-    return strftime('%a', localtime(time() + 12 * 3600))
+    return strftime('%a', localtime(time()))
 
 
 def tomorrow():
-    return strftime('%a', localtime(time() + 36 * 3600))
+    return strftime('%a', localtime(time() + 24 * 3600))
+
+def changedate():
+    if int(strftime('%H', localtime(time())))>=19:
+        return tomorrow()
+    else:
+        return today()
