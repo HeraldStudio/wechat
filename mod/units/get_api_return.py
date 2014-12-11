@@ -28,7 +28,10 @@ def get_api_return(api_name, user):
         ret = json.loads(response.body)
         if ret['code'] == 200:
             return ret
-        ret['content'] = error_map[ret['code']]
+        elif ret['code'] == 401:
+            ret['content'] = error_map[401] % (LOCAL, user.openid)
+        else:
+            ret['content'] = error_map[ret['code']]
     except HTTPError as e:
         ret['code'] = e.code
         if ret['code'] == 401:
@@ -37,6 +40,6 @@ def get_api_return(api_name, user):
             ret['content'] = error_map[ret['code']]
     except:
         ret['code'] = 500
-        ret['content'] = u'=。= 服务器未能及时回应请求，如不再试试'
+        ret['content'] = u'=。= 服务器未能及时回应请求，不如再试试'
     return ret
 
