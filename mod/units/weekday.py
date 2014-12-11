@@ -16,3 +16,9 @@ def changedate():
         return tomorrow()
     else:
         return today()
+
+def ismorning():
+    if 5<=int(strftime('%H', localtime(time())))<=8:
+        return True
+    else:
+        return False

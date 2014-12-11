@@ -6,7 +6,7 @@ from sqlalchemy.sql import or_
 from ..models.course import Course
 from ..models.gpa import Overview as GPAO
 from ..models.srtp import Overview as SRTPO
-from weekday import today, tomorrow, changedate
+from weekday import today, tomorrow, changedate, ismorning
 from config import LOCAL
 from get_api_return import get_api_return
 import urllib
@@ -18,7 +18,7 @@ def curriculum(db, user, day):
     courses = db.query(Course).filter(
         Course.openid == user.openid, Course.day == day).all()
     p = re.compile(r'\[|\]|\(|\)')
-    msg = u''
+    msg = u'<a href="%s/update/curriculum/%s">更新课表</a>\n\n' % (LOCAL, user.openid)
     for course in courses:
         msg += course.course + u'\n' + \
             '   '.join(p.split(course.period)).strip() + u'\n' + \
@@ -35,7 +35,7 @@ def new_curriculum(db, user):
     courses = db.query(Course).filter(
         Course.openid == user.openid, Course.day == changedate()).all()
     p = re.compile(r'\[|\]|\(|\)')
-    msg = u''
+    msg = u'<a href="%s/update/curriculum/%s">更新课表</a>\n\n' % (LOCAL, user.openid)
     for course in courses:
         msg += course.course + u'\n' + \
             '   '.join(p.split(course.period)).strip() + u'  ' + daymap[course.day] + u'\n' + \
@@ -48,11 +48,19 @@ def new_curriculum(db, user):
     return msg
 
 def pe_counts(user):
+    msg = u''
     response = get_api_return('pe', user)
     if response['code'] == 200:
-        return u'当前跑操次数 %s 次' % response['content']
+        msg += u'当前跑操次数 %s 次' % response['content']
     else:
-        return response['content']
+        msg += response['content']
+    response = get_api_return('pc', user)
+    if ismorning():
+        if response['code'] == 201:
+            msg += u'\n\n0.0, 早起有益健康，小猴正在获取跑操情报，等会再试试'
+        else:
+            msg += u'\n\n小猴猜测' + response['content']
+    return msg
 
 
 def rendered(user):
@@ -85,17 +93,18 @@ def rendered(user):
 
 
 def gpa(db, user):
+    msg = u'<a href="%s/update/gpa/%s">更新GPA</a>\n\n' % (LOCAL, user.openid)
     try:
         overview = db.query(GPAO).filter(
             GPAO.openid == user.openid).one()
         if overview.gpa:
-            msg = u'总绩点：%s\n首修绩点：%s\n计算时间：%s\n\n' % (
+            msg += u'总绩点：%s\n首修绩点：%s\n计算时间：%s\n\n' % (
                 overview.gpa, overview.before_revamp,
                 overview.calc_time.split(' ')[0])
             msg += u'<a href="%s/gpa/%s">GPA详情</a>' % (
                 LOCAL, user.openid)
         else:
-            msg = u'你们学院居然没有计算GPA？\n\n<a href="%s/gpa/%s">GPA详情</a>' % (
+            msg += u'你们学院居然没有计算GPA？\n\n<a href="%s/gpa/%s">GPA详情</a>' % (
                 LOCAL, user.openid)
 
     except:
@@ -106,15 +115,16 @@ def gpa(db, user):
 
 
 def srtp(db, user):
+    msg = u'<a href="%s/update/srtp/%s">更新SRTP</a>\n\n' % (LOCAL, user.openid)
     try:
         overview = db.query(SRTPO).filter(
             SRTPO.openid == user.openid).one()
-        msg = u'总分：%s\n成绩：%s\n\n' % (
+        msg += u'总分：%s\n成绩：%s\n\n' % (
             overview.total, overview.score)
         msg += u'<a href="%s/srtp/%s">SRTP详情</a>' % (
             LOCAL, user.openid)
     except:
-        msg = u'<a href="%s/register/%s">=。= 同学，你不是把学号填错了吧，快点我修改。</a>' % (
+        msg += u'<a href="%s/register/%s">=。= 同学，你不是把学号填错了吧，快点我修改。</a>' % (
             LOCAL, user.openid)
     finally:
         return msg

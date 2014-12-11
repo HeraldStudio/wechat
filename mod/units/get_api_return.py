@@ -26,7 +26,7 @@ def get_api_return(api_name, user):
     try:
         response = client.fetch(request)
         ret = json.loads(response.body)
-        if ret['code'] == 200:
+        if 200<=ret['code']< 300:
             return ret
         elif ret['code'] == 401:
             ret['content'] = error_map[401] % (LOCAL, user.openid)
