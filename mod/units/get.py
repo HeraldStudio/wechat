@@ -70,8 +70,8 @@ def rendered(user):
         try:
             books = response['content']
             for book in books:
-                detail = u'\n%s\n%s\n借书时间：%s\n到期时间：%s' % (
-                    book['author'], book['place'],
+                detail = u'\n%s\n借书时间：%s\n到期时间：%s' % (
+                    book['author'],
                     book['render_date'], book['due_date'])
                 if book['renew_time'] == u'0':
                     msg += u'<a href="%s/renew/%s/%s">《%s》</a>%s' % (
