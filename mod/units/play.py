@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # @Date    : 2014-07-05 22:43:49
 # @Author  : xindervella@gamil.com yml_bright@163.com
-from tornado.httpclient import HTTPRequest, HTTPClient
+from tornado.httpclient import HTTPRequest, HTTPClient, HTTPError
 from config import SERVICE, TIME_OUT, DEFAULT_UUID
 from get_api_return import error_map
 import urllib

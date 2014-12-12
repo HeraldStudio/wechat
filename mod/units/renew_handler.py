@@ -34,7 +34,7 @@ class RenewHandler(tornado.web.RequestHandler):
             request = HTTPRequest(SERVICE + 'renew', method='POST', body=params,
                                   request_timeout=TIME_OUT)
             response = yield tornado.gen.Task(client.fetch, request)
-            response = json.loads(response)
+            response = json.loads(response.body)
             if response['code'] == 200:
                 if response['content'] == 'success':
                     self.write(TEMPLATE.format(content='续借成功'))

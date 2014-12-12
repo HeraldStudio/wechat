@@ -54,8 +54,8 @@ def pe_counts(user):
         msg += u'当前跑操次数 %s 次' % response['content']
     else:
         msg += response['content']
-    response = get_api_return('pc', user)
     if ismorning():
+        response = get_api_return('pc', user)
         if response['code'] == 201:
             msg += u'\n\n0.0, 早起有益健康，小猴正在获取跑操情报，等会再试试'
         else:
