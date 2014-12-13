@@ -57,12 +57,15 @@ class Message(object):
 
     @property
     def sub_content(self):
-        return self.msg.get('Content', None)[2:]
+        try:
+            return self.msg.get('Content', None)[2:]
+        except:
+            return u''
 
     @property
     def content(self):
         content = self.msg.get('Content', None)
-        if content[0:2] == u'搜书':
+        if content[0:2].lower() == u'ss':
             return 'searchlib'
         if u'更新' in content:
             if u'课' in content:
@@ -144,8 +147,7 @@ class Message(object):
             return 'help'
         elif u'怎么用' in content:
             return 'help'
-        else:
-            return 'nothing'
+        return 'nothing'
 
     @property
     def openid(self):

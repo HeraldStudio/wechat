@@ -103,35 +103,41 @@ class WechatHandler(tornado.web.RequestHandler):
                                    self.get_argument('timestamp', default=''),
                                    self.get_argument('nonce', default='')):
             self.wx.parse_msg(self.request.body)
-            if self.wx.msg_type == 'event' and self.wx.event == 'subscribe':
-                self.write(self.wx.response_text_msg('welcome'))
-                self.finish()
-            elif self.wx.msg_type == 'text':
-                try:
-                    user = self.db.query(User).filter(
-                        User.openid == self.wx.openid).one()
-                    if user.state == 0:
-                        self.unitsmap[self.wx.content](user)
-                    elif user.state == 1:
-                        self.simsimi(self.wx.raw_content, user)
-                except NoResultFound:
-                    self.write(self.wx.response_text_msg(
-                        u'<a href="%s/register/%s">=。= 不如先点我绑定一下？</a>' % (
-                            LOCAL, self.wx.openid)))
+            try:
+                if self.wx.msg_type == 'event' and self.wx.event == 'subscribe':
+                    self.write(self.wx.response_text_msg('welcome'))
                     self.finish()
-            elif self.wx.msg_type == 'event':
-                try:
-                    user = self.db.query(User).filter(
-                        User.openid == self.wx.openid).one()
+                elif self.wx.msg_type == 'text':
                     try:
-                        self.unitsmap[self.wx.event_key](user)
-                    except KeyError:
+                        user = self.db.query(User).filter(
+                            User.openid == self.wx.openid).one()
+                        if user.state == 0:
+                            self.unitsmap[self.wx.content](user)
+                        elif user.state == 1:
+                            self.simsimi(self.wx.raw_content, user)
+                    except NoResultFound:
+                        self.write(self.wx.response_text_msg(
+                            u'<a href="%s/register/%s">=。= 不如先点我绑定一下？</a>' % (
+                                LOCAL, self.wx.openid)))
                         self.finish()
-                except NoResultFound:
-                    self.write(self.wx.response_text_msg(
-                        u'<a href="%s/register/%s">=。= 不如先点我绑定一下？</a>' % (
-                            LOCAL, self.wx.openid)))
-                    self.finish()
+                elif self.wx.msg_type == 'event':
+                    try:
+                        user = self.db.query(User).filter(
+                            User.openid == self.wx.openid).one()
+                        try:
+                            self.unitsmap[self.wx.event_key](user)
+                        except KeyError:
+                            self.finish()
+                    except NoResultFound:
+                        self.write(self.wx.response_text_msg(
+                            u'<a href="%s/register/%s">=。= 不如先点我绑定一下？</a>' % (
+                                LOCAL, self.wx.openid)))
+                        self.finish()
+            except:
+                with open('wechat_error.log','w+') as f:
+                    f.write(strftime('%Y%m%d %H:%M:%S in [wechat]', localtime(time()))+'\n'+str(sys.exc_info()[0])+str(sys.exc_info()[1])+'\n\n')
+                self.write(self.wx.response_text_msg(u'小猴正在自我改良中～稍候再试， 么么哒！'))
+                self.finish()
             else:
                 self.write(self.wx.response_text_msg(u'??'))
                 self.finish()

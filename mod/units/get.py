@@ -182,7 +182,7 @@ def searchlib(user, text):
     response = get_api_return('search', user, data)
     if response['code'] == 200:
         ret = response['content']
-        msg = u''
+        msg = u'搜索结果:\n'
         for m in ret:
             msg += u'●(%s)%s[%s/%s] - %s\n' % (
                     m['index'], m['name'],
