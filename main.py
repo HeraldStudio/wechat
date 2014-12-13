@@ -79,6 +79,7 @@ class WechatHandler(tornado.web.RequestHandler):
             'nic': self.nic,
             'card': self.card,
             'lecture': self.lecture,
+            'jwc': self.jwc,
             'nothing': self.nothing
         }
 
@@ -233,6 +234,11 @@ class WechatHandler(tornado.web.RequestHandler):
         self.write(self.wx.response_text_msg(msg))
         self.finish()
 
+    #教务处
+    def jwc(self, user):
+        msg = get.jwc(user)
+        self.write(self.wx.response_text_msg(msg))
+        self.finish()
 
 
     # 其他

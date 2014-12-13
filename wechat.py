@@ -132,6 +132,8 @@ class Message(object):
             return 'card'
         elif u'余额' in content:
             return 'card'
+        elif u'教务' in content:
+            return 'jwc'
         elif u'说明' in content:
             return 'help'
         elif u'怎么用' in content:

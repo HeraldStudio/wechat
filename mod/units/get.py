@@ -160,3 +160,19 @@ def card(user):
         return u'一卡通余额:%s' % ret['left']
     else:
         return response['content']
+
+def jwc(user):
+    response = get_api_return('jwc', user)
+    if response['code'] == 200:
+        msg = u'最新动态:\n'
+        ret = response['content']
+        for m in ret[u'最新动态']:
+            msg += u'● <a href="%s">%s - %s</a>\n' % (m['href'], m['title'], m['date'][2:].replace('-',''))
+        msg += u'\n\n实践教学:\n'
+        for m in ret[u'实践教学']:
+            msg += u'● <a href="%s">%s - %s</a>\n' % (m['href'], m['title'], m['date'][2:].replace('-',''))
+        return msg
+    elif response['code'] == 201:
+            return u'小猴正在获取教务信息，等会再试试'
+    else:
+        return response['content']
