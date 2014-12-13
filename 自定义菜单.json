@@ -70,13 +70,8 @@
                 },
                 {
                     "type": "click",
-                    "name": "更新GPA",
-                    "key": "update-gpa"
-                },
-                {
-                    "type": "click",
-                    "name": "更新SRTP",
-                    "key": "update-srtp"
+                    "name": "教务通知",
+                    "key": "jwc"
                 },
                 {
                     "type": "click",

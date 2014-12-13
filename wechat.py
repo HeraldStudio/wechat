@@ -56,8 +56,14 @@ class Message(object):
         return self.msg.get('Content', None)
 
     @property
+    def sub_content(self):
+        return self.msg.get('Content', None)[2:]
+
+    @property
     def content(self):
         content = self.msg.get('Content', None)
+        if content[0:2] == u'搜书':
+            return 'searchlib'
         if u'更新' in content:
             if u'课' in content:
                 return 'update-curriculum'

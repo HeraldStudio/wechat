@@ -176,3 +176,17 @@ def jwc(user):
             return u'小猴正在获取教务信息，等会再试试'
     else:
         return response['content']
+
+def searchlib(user, text):
+    data = {'book': text.strip().encode('utf-8')}
+    response = get_api_return('search', user, data)
+    if response['code'] == 200:
+        ret = response['content']
+        msg = u''
+        for m in ret:
+            msg += u'●(%s)%s[%s/%s] - %s\n' % (
+                    m['index'], m['name'],
+                    m['left'], m['all'], m['author'])
+        return msg
+    else:
+        return response['content']

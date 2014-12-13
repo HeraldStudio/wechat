@@ -80,6 +80,7 @@ class WechatHandler(tornado.web.RequestHandler):
             'card': self.card,
             'lecture': self.lecture,
             'jwc': self.jwc,
+            'searchlib': self.searchlib,
             'nothing': self.nothing
         }
 
@@ -240,6 +241,11 @@ class WechatHandler(tornado.web.RequestHandler):
         self.write(self.wx.response_text_msg(msg))
         self.finish()
 
+    #图书馆搜索图书
+    def searchlib(self, user):
+        msg = get.searchlib(user, self.wx.sub_content)
+        self.write(self.wx.response_text_msg(msg))
+        self.finish()
 
     # 其他
     def change_user(self, user):
