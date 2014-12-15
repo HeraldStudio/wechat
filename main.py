@@ -274,7 +274,7 @@ class WechatHandler(tornado.web.RequestHandler):
         self.finish()
 
     def nothing(self, user):
-        msg = u'无法识别命令，想要调戏小猴别忘了点一下[调戏],么么哒'
+        msg = u'无法识别命令.\n想要调戏小猴别忘了点一下[调戏]\n想要找图书前面别忘了加上"ss"\n么么哒'
         self.write(self.wx.response_text_msg(msg))
         self.finish()
 
