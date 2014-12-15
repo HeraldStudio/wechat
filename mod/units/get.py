@@ -171,7 +171,7 @@ def jwc(user):
         msg += u'\n\n实践教学:\n'
         for m in ret[u'实践教学']:
             msg += u'● <a href="%s">%s - %s</a>\n' % (m['href'], m['title'], m['date'][2:].replace('-',''))
-        return msg
+        return msg[:-1]
     elif response['code'] == 201:
             return u'小猴正在获取教务信息，等会再试试'
     else:
@@ -187,6 +187,24 @@ def searchlib(user, text):
             msg += u'●(%s)%s[%s/%s] - %s\n' % (
                     m['index'], m['name'],
                     m['left'], m['all'], m['author'])
-        return msg
+        return msg[:-1]
+    else:
+        return response['content']
+
+def schoolbus(user):
+    response = get_api_return('schoolbus', user)
+    if response['code'] == 200:
+        if today() in ['Sat', 'Sun']:
+            ret = response['content']['weekend']
+        else:
+            ret = response['content']['weekday']
+        msg = u'Tips:\n九 --- 九龙湖\n河 --- 进香河(四牌楼)\n桥 --- 丁家桥\n江 --- 龙江\n九龙湖乘车: 西门路口\n四牌楼乘车: 交院香园停车场\n'
+        msg += u'\n前往九龙湖:\n'
+        for m in ret[u'进九龙湖']:
+            msg += u'[%s] - %s\n' % ( m['time'], m['bus'] )
+        msg += u'\n九龙湖返回:\n'
+        for m in ret[u'出九龙湖']:
+            msg += u'[%s] - %s\n' % ( m['time'], m['bus'] )
+        return msg[:-1]
     else:
         return response['content']

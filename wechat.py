@@ -65,88 +65,38 @@ class Message(object):
     @property
     def content(self):
         content = self.msg.get('Content', None)
+
+        key={
+            'help' : {'first':'', 'content': [u'怎么用' , u'说明']},
+            'change-user': {'first':'', 'content': [u'改变用户',u'重新',u'绑定']},
+            'srtp': {'first':'', 'content': [u'SRTP' ,u'Srtp', u'srtp']},
+            'play':{'first':'', 'content': [u'调戏']},
+            'card':{'first':'', 'content': [u'一卡通',u'余额']},
+            'nic':{'first':'', 'content': [u'流量',u'wed',u'Web',u'网络']},
+            'gpa':{'first':'', 'content': [u'绩点', u'成绩', u'Gpa', u'gpa', u'GPA']},
+            'lecture':{'first':'', 'content': [u'人文讲座', u'讲座']},
+            'library':{'first':u'书', 'content': [u'借阅',u'查询']},
+            'pe':{'first':'', 'content': [u'跑操']},
+            'update-curriculum':{'first':'',u'更新':'', 'content': [u'课表']},
+            'update-gpa':{'first':u'更新', 'content': [u'Gpa',u'GPA',u'绩点']},
+            'update-srtp':{'first':u'更新', 'content': [u'srtp',u'Srtp',u'SRTP']},
+            'jwc':{'first':'', 'content': [u'教务']},
+            'schoolbus':{'first':'', 'content': [u'校车']},
+            }
+
         if content[0:2].lower() == u'ss':
             return 'searchlib'
-        if u'更新' in content:
-            if u'课' in content:
-                return 'update-curriculum'
-            elif u'绩' in content:
-                return 'update-gpa'
-            elif u'gpa' in content:
-                return 'update-gpa'
-            elif u'GPA' in content:
-                return 'update-gpa'
-            elif u'Gpa' in content:
-                return 'update-gpa'
-            elif u'srtp' in content:
-                return 'update-srtp'
-            elif u'SRTP' in content:
-                return 'update-srtp'
-            elif u'Srtp' in content:
-                return 'update-srtp'
-        elif u'课' in content:
-            if u'明' in content:
-                return 'tomorrow-curriculum'
-            else:
-                return 'today-curriculum'
-        elif u'跑' in content:
-            if u'操' in content:
-                return 'pe'
-            elif u'次' in content:
-                return 'pe'
-            else:
-                return 'nothing'
-        elif u'书' in content:
-            if u'借' in content:
-                return 'library'
-            elif u'图' in content:
-                return 'library'
-        elif u'GPA' in content:
-            return 'gpa'
-        elif u'Gpa' in content:
-            return 'gpa'
-        elif u'gpa' in content:
-            return 'gpa'
-        elif u'绩点' in content:
-            return 'gpa'
-        elif u'成绩' in content:
-            return 'gpa'
-        elif u'srtp' in content:
-            return 'srtp'
-        elif u'SRTP' in content:
-            return 'srtp'
-        elif u'Srtp' in content:
-            return 'srtp'
-        elif u'调戏' in content:
-            return 'play'
-        elif u'绑定' in content:
-            return 'change-user'
-        elif u'重新' in content:
-            return 'change-user'
-        elif u'换人' in content:
-            return 'change-user'
-        elif u'人文' in content:
-            return 'lecture'
-        elif u'讲座' in content:
-            return 'lecture'
-        elif u'流量' in content:
-            return 'nic'
-        elif u'网络' in content:
-            return 'nic'
-        elif u'Web' in content:
-            return 'nic'
-        elif u'web' in content:
-            return 'nic'
-        elif u'一卡通' in content:
-            return 'card'
-        elif u'余额' in content:
-            return 'card'
-        elif u'教务' in content:
-            return 'jwc'
-        elif u'说明' in content:
-            return 'help'
-        elif u'怎么用' in content:
-            return 'help'
+
+        for func in key:
+            try:
+                if key[func]['first'] in content:
+                    for k in key[func]['content']:
+                            if k in content:
+                                return func
+            except KeyError:
+                  for k in key[x]:
+                        if k in content:
+                              return func
         return 'nothing'
 
     @property

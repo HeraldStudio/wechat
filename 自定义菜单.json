@@ -65,8 +65,8 @@
             "sub_button":[
                 {
                     "type": "click",
-                    "name": "更新课表",
-                    "key": "update-curriculum"
+                    "name": "校车时刻",
+                    "key": "schoolbus"
                 },
                 {
                     "type": "click",
