@@ -179,6 +179,8 @@ def jwc(user):
 
 def searchlib(user, text):
     data = {'book': text.strip().encode('utf-8')}
+    if len(data['book'])<2:
+        return u'至少要输入两个关键字'
     response = get_api_return('search', user, data)
     if response['code'] == 200:
         ret = response['content']
@@ -187,7 +189,9 @@ def searchlib(user, text):
             msg += u'●(%s)%s[%s/%s] - %s\n' % (
                     m['index'], m['name'],
                     m['left'], m['all'], m['author'])
-        return msg[:-1]
+        msg += u'\n大致藏书范围\nA~E: 中图1(二楼)\nF~G: 中图2(二楼)\nH: 中图3(二楼)\nI~J: 友丰(五楼)\
+                 \nK~TF: 中图3(一楼)\nTG~TP311: 中图4(二楼)\nTP311~Z: 中图4(一楼)\n外文图书: 外图(四楼)'
+        return msg
     else:
         return response['content']
 

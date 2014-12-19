@@ -134,13 +134,13 @@ class WechatHandler(tornado.web.RequestHandler):
                             u'<a href="%s/register/%s">=。= 不如先点我绑定一下？</a>' % (
                                 LOCAL, self.wx.openid)))
                         self.finish()
+                else:
+                    self.write(self.wx.response_text_msg(u'??'))
+                    self.finish()
             except:
                 with open('wechat_error.log','w+') as f:
                     f.write(strftime('%Y%m%d %H:%M:%S in [wechat]', localtime(time()))+'\n'+str(sys.exc_info()[0])+str(sys.exc_info()[1])+'\n\n')
                 self.write(self.wx.response_text_msg(u'小猴正在自我改良中～稍候再试， 么么哒！'))
-                self.finish()
-            else:
-                self.write(self.wx.response_text_msg(u'??'))
                 self.finish()
         else:
             self.write('message processing fail')
