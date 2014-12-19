@@ -11,7 +11,7 @@ from ..models.gpa import Overview as GPAO, Detail as GPAD
 from ..models.srtp import Overview as SRTPO, Detail as SRTPD
 from get_api_return import get_api_return
 
-TEMPLATE = '<center><h1 style="margin-top:30%">{content}</h2></center>'
+TEMPLATE = u'<center><h1 style="margin-top:30%">{content}</h2></center>'
 
 class UpdateHandler(tornado.web.RequestHandler):
 
@@ -49,10 +49,10 @@ class UpdateHandler(tornado.web.RequestHandler):
                                      proportion=item['proportion']))
                     try:
                         db.commit()
-                        self.write(TEMPLATE.format(content='更新好啦'))
+                        self.write(TEMPLATE.format(content=u'更新好啦'))
                     except:
                         db.rollback()
-                        self.write(TEMPLATE.format(content='T T 出了点小问题'))
+                        self.write(TEMPLATE.format(content=u'T T 出了点小问题'))
                 else:
                     self.write(TEMPLATE.format(content=response['content']))
             elif type == 'gpa':
@@ -82,10 +82,10 @@ class UpdateHandler(tornado.web.RequestHandler):
                                     extra=item['extra']))
                     try:
                         db.commit()
-                        self.write(TEMPLATE.format(content='更新好啦'))
+                        self.write(TEMPLATE.format(content=u'更新好啦'))
                     except:
                         db.rollback()
-                        self.write(TEMPLATE.format(content='T T 出了点小问题'))
+                        self.write(TEMPLATE.format(content=u'T T 出了点小问题'))
                 else:
                     self.write(TEMPLATE.format(content=response['content']))
             elif type == 'curriculum':
@@ -104,16 +104,16 @@ class UpdateHandler(tornado.web.RequestHandler):
                                           day=day))
                     try:
                         db.commit()
-                        self.write(TEMPLATE.format(content='更新好啦'))
+                        self.write(TEMPLATE.format(content=u'更新好啦'))
                     except:
                         db.rollback()
-                        self.write(TEMPLATE.format(content='T T 出了点小问题'))
+                        self.write(TEMPLATE.format(content=u'T T 出了点小问题'))
                 else:
                     self.write(TEMPLATE.format(content=response['content']))
             else:
-                self.write(TEMPLATE.format(content='T T 出了点小问题???'))
+                self.write(TEMPLATE.format(content=u'T T 出了点小问题???'))
         except:
-            self.write(TEMPLATE.format(content='T T 出了点小问题...'))
+            self.write(TEMPLATE.format(content=u'T T 出了点小问题...'))
         self.finish()
 
     def on_finish(self):
