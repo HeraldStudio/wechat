@@ -12,9 +12,10 @@ Base = declarative_base()
 
 class Messsage(Base):
     __tablename__ = 'message'
-    openid = Column(String(50), nullable=False)
+    openid = Column(String(50), nullable=False, primary_key=True)
+    message = Column(String(500), nullable=False)
     timestamp = Column(Integer, nullable=False)
-    type = Column(String(5), nullable=False)
+    type = Column(Integer, nullable=False)
     state = Column(Integer, nullable=False)
 
 

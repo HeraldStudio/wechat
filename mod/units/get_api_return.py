@@ -42,7 +42,7 @@ def get_api_return(api_name, user, data={}):
         else:
             ret['content'] = error_map[ret['code']]
     except:
-        with open('api_error.log','w+') as f:
+        with open('api_error.log','a+') as f:
             f.write(strftime('%Y%m%d %H:%M:%S in [get_api_return]', localtime(time()))+'\n'+str(sys.exc_info())+'\n\n')
         ret['code'] = 500
         ret['content'] = u'=。= 服务器未能及时回应请求，不如再试试'

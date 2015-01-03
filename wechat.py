@@ -82,6 +82,7 @@ class Message(object):
             'update-srtp':{'first':u'更新', 'content': [u'srtp',u'Srtp',u'SRTP']},
             'jwc':{'first':'', 'content': [u'教务']},
             'schoolbus':{'first':'', 'content': [u'校车']},
+            'quanyi':{'first':'', 'content': [u'权益']},
             }
 
         if content[0:2].lower() == u'ss':

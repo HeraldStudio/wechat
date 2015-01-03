@@ -14,6 +14,7 @@ from mod.units.update_handler import UpdateHandler
 from mod.units import update
 from mod.units import get
 from mod.units import play
+from mod.units import quanyi
 from mod.models.user import User
 from mod.units.weekday import today, tomorrow
 from mod.units.config import LOCAL
@@ -23,7 +24,8 @@ import tornado.httpserver
 import tornado.options
 import tornado.gen
 import wechat
-import os
+import os, sys
+from time import localtime, strftime, time
 
 from tornado.options import define, options
 define('port', default=7200, help='run on the given port', type=int)
@@ -82,6 +84,7 @@ class WechatHandler(tornado.web.RequestHandler):
             'jwc': self.jwc,
             'searchlib': self.searchlib,
             'schoolbus': self.schoolbus,
+            'quanyi': self.quanyi_info,
             'nothing': self.nothing
         }
 
@@ -138,7 +141,7 @@ class WechatHandler(tornado.web.RequestHandler):
                     self.write(self.wx.response_text_msg(u'??'))
                     self.finish()
             except:
-                with open('wechat_error.log','w+') as f:
+                with open('wechat_error.log','a+') as f:
                     f.write(strftime('%Y%m%d %H:%M:%S in [wechat]', localtime(time()))+'\n'+str(sys.exc_info()[0])+str(sys.exc_info()[1])+'\n\n')
                 self.write(self.wx.response_text_msg(u'小猴正在自我改良中～稍候再试， 么么哒！'))
                 self.finish()
@@ -257,6 +260,12 @@ class WechatHandler(tornado.web.RequestHandler):
     #校车
     def schoolbus(self, user):
         msg = get.schoolbus(user)
+        self.write(self.wx.response_text_msg(msg))
+        self.finish()
+
+    #xiao quan yi
+    def quanyi_info(self, user):
+        msg = quanyi.quanyi(self.db, user)
         self.write(self.wx.response_text_msg(msg))
         self.finish()
 

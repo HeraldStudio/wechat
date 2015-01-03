@@ -65,6 +65,11 @@
             "sub_button":[
                 {
                     "type": "click",
+                    "name": "权益服务",
+                    "key": "quanyi"
+                },
+                {
+                    "type": "click",
                     "name": "校车时刻",
                     "key": "schoolbus"
                 },
