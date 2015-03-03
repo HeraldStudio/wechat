@@ -24,7 +24,7 @@ class UpdateHandler(tornado.web.RequestHandler):
             db = self.db
             user = self.db.query(User).filter(User.openid == openid).one()
             if type == 'srtp':
-                response = get_api_return('srtp', user)
+                response = get_api_return('srtp', user, timeout=17)
                 if response['code'] == 200:
                     srtp = response['content']
                     try:
@@ -56,7 +56,7 @@ class UpdateHandler(tornado.web.RequestHandler):
                 else:
                     self.write(TEMPLATE.format(content=response['content']))
             elif type == 'gpa':
-                response = get_api_return('gpa', user)
+                response = get_api_return('gpa', user, timeout=17)
                 if response['code'] == 200:
                     gpa = response['content']
                     try:
@@ -89,7 +89,7 @@ class UpdateHandler(tornado.web.RequestHandler):
                 else:
                     self.write(TEMPLATE.format(content=response['content']))
             elif type == 'curriculum':
-                response = get_api_return('curriculum', user)
+                response = get_api_return('curriculum', user, timeout=17)
                 if response['code'] == 200:
                     courses = db.query(Course).filter(Course.openid == user.openid).all()
                     curriculum = response['content']

@@ -19,13 +19,13 @@ error_map = {
         500 : u'=。= 出了点故障，不如待会再试试吧',        # server error
     }
 
-def get_api_return(api_name, user, data={}):
+def get_api_return(api_name, user, data={}, timeout=TIME_OUT):
     ret = {}
     client = HTTPClient()
     data['uuid'] = user.uuid
     params = urllib.urlencode(data)
     request = HTTPRequest(SERVICE + api_name, method='POST',
-                          body=params, request_timeout=TIME_OUT)
+                          body=params, request_timeout=timeout)
     try:
         response = client.fetch(request)
         ret = json.loads(response.body)
