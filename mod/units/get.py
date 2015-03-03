@@ -108,8 +108,8 @@ def gpa(db, user):
                 LOCAL, user.openid)
 
     except:
-        msg = u'<a href="%s/register/%s">居然没有绩点你敢信？你不是把一卡通/\
-密码输错了吧，快点我修改。</a>' % (LOCAL, user.openid)
+        msg += u'居然没有绩点你敢信？<a href="%s/register/%s">你不是把一卡通/\
+密码输错了吧，快点我修改。</a>还是没有更新过GPA？快点上方的更新吧。' % (LOCAL, user.openid)
     finally:
         return msg
 
@@ -124,7 +124,7 @@ def srtp(db, user):
         msg += u'<a href="%s/srtp/%s">SRTP详情</a>' % (
             LOCAL, user.openid)
     except:
-        msg += u'<a href="%s/register/%s">=。= 同学，你不是把学号填错了吧，快点我修改。</a>' % (
+        msg += u'<a href="%s/register/%s">=。= 同学，你不是把学号填错了吧，快点我修改。</a>还是没有更新过SRTP？快点上方的更新吧。' % (
             LOCAL, user.openid)
     finally:
         return msg
@@ -138,6 +138,8 @@ def lecture(user):
             msg += u"%s\n%s\n\n"%(d['date'], d['place'])
         msg += u'当前人文讲座次数 %s 次' % ret['count']
         return msg
+    elif response['code'] == 599:
+        return u"正在获取最新数据，再点一次就有啦！"
     else:
         return response['content']
 
@@ -150,6 +152,8 @@ def nic(user):
                 ret['a']['state'], ret['a']['used'],
                 ret['b']['state'], ret['b']['used'],
                 ret['web']['state'], ret['web']['used'])
+    elif response['code'] == 599:
+        return u"正在获取最新数据，再点一次就有啦！"
     else:
         return response['content']
 
@@ -158,6 +162,8 @@ def card(user):
     if response['code'] == 200:
         ret = response['content']
         return u'一卡通余额:%s' % ret['left']
+    elif response['code'] == 599:
+        return u"正在获取最新数据，再点一次就有啦！"
     else:
         return response['content']
 
@@ -173,7 +179,7 @@ def jwc(user):
             msg += u'● <a href="%s">%s - %s</a>\n' % (m['href'], m['title'], m['date'][2:].replace('-',''))
         return msg[:-1]
     elif response['code'] == 201:
-            return u'小猴正在获取教务信息，等会再试试'
+        return u'小猴正在获取教务信息，等会再试试'
     else:
         return response['content']
 
