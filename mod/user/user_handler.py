@@ -79,6 +79,7 @@ class UserHandler(tornado.web.RequestHandler):
                                         uuid=uuid,
                                         state=0)
                         else:
+                            user.cardnum = cardnum
                             user.uuid = uuid
                         self.db.add(user)
                     else:
