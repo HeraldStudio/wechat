@@ -9,7 +9,7 @@ from time import localtime, strftime
 import base64
 
 def quanyi(db, user):
-    msg = u'<a href="https://jinshuju.net/f/By3aTK">点我向校权益投诉</a>\n\n'
+    msg = u'<a href="https://jinshuju.net/f/By3aTK">点我向校会权益投诉</a>\n\n'
     try:
         message = db.query(Messsage).filter( Messsage.openid == 'quanyi').one()
         if message.state:

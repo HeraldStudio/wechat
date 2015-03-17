@@ -11,6 +11,7 @@ from mod.units.renew_handler import RenewHandler
 from mod.units.gpa_handler import GPAHandler
 from mod.units.srtp_handler import SRTPHandler
 from mod.units.update_handler import UpdateHandler
+from mod.units.card_handler import CradHandler
 from mod.units import update
 from mod.units import get
 from mod.units import play
@@ -40,6 +41,7 @@ class Application(tornado.web.Application):
             (r'/wechat2/curriculum/([\S]+)', CurriculumHandler),
             (r'/wechat2/renew/([\S]+)/([\S]+)', RenewHandler),
             (r'/wechat2/gpa/([\S]+)', GPAHandler),
+            (r'/wechat2/card/([\S]+)', CradHandler),
             (r'/wechat2/srtp/([\S]+)', SRTPHandler),
             (r'/wechat2/update/([\S]+)/([\S]+)', UpdateHandler),
 
