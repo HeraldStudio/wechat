@@ -13,13 +13,12 @@
             <div >
                 {%if detail['state']%}<p data-role="listview" data-inset="true">状态：{{detail['state']}}</p>{% end %}
                 {%if detail['left']%}<p data-role="listview" data-inset="true">余额：{{detail['left']}}</p>{% end %}
-                <div data-role="collapsible">
-                    <h1>详细信息</h1>
+                <div>
                     {% for item in detail['detial'] %}
                         <div data-role="listview" data-inset="true" >
-                        {%for key in item%}
-                            <li >{{item[key]}}</li>
-                        {% end %}
+                       <li>{{item['date']}}</li>
+                       <li>{{item['system']}}</li>
+                       <li>{{item['price']}}&nbsp;&nbsp;&nbsp;{{item['left']}}</li>
                         <div>
                     {% end %}
             </div>

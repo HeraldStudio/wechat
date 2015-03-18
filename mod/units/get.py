@@ -161,7 +161,10 @@ def card(user):
     response = get_api_return('card', user)
     if response['code'] == 200:
         ret = response['content']
-        return u'一卡通余额:%s' % ret['left']
+        msg = u'一卡通余额:%s' % ret['left']
+        msg += u'\n\n<a href="%s/card/%s">一卡通交易明细</a>' % (
+            LOCAL, user.openid)
+        return msg
     elif response['code'] == 599:
         return u"正在获取最新数据，再点一次就有啦！"
     else:
