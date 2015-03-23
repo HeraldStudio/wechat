@@ -62,6 +62,28 @@ def pe_counts(user):
             msg += u'\n\n小猴猜测' + response['content']
     return msg
 
+def phylab(user):
+    response = get_api_return('phylab',user)
+    msg = u''
+    if response['code'] ==200:
+        content = response['content']
+        for labType in content:
+            if content[labType]!='':
+                msg +=u'● %s:\n' %labType
+                for lab in content[labType]:
+                    msg +=u'%s\n' %lab['name']
+                    msg +=u'%s   ' %lab['Teacher']
+                    if not lab['Grade']:
+                        msg +=u'%s\n' %lab['Address']
+                        msg +=u'%s %s\n' %(lab['Date'],lab['Day'])
+                    else:
+                        msg +=u'成绩:%s\n' %lab['Grade']
+                msg +=u'\n\n'
+        if not msg:
+            msg = u'没有物理实验哦'
+        return msg
+    else:
+        return response['content'] 
 
 def rendered(user):
     response = get_api_return('library', user)
@@ -142,6 +164,19 @@ def lecture(user):
         return u"正在获取最新数据，再点一次就有啦！"
     else:
         return response['content']
+
+def lecturenotice(user):
+    response = get_api_return('lecturenotice', user)
+    if response['code'] == 500:
+        return lecture(user)
+    else:
+        msg = u'人文讲座预告:\n'
+        for lec in response['content']:
+            msg += u"%s(%s)\n"%(lec['topic'], lec['speaker'])
+            msg += u"%s %s\n"%(lec['date'], lec['location'])
+            msg += u"<a href='%s'>戳我查看详细信息</a>\n\n\n"%lec['detail']
+        msg += u"查询讲座次数请在非调戏状态输入[讲座次数]"
+        return msg
 
 def nic(user):
     response = get_api_return('nic', user)

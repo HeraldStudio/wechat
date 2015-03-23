@@ -83,10 +83,12 @@ class WechatHandler(tornado.web.RequestHandler):
             'nic': self.nic,
             'card': self.card,
             'lecture': self.lecture,
+            'lecturenotice': self.lecturenotice,
             'jwc': self.jwc,
             'searchlib': self.searchlib,
             'schoolbus': self.schoolbus,
             'quanyi': self.quanyi_info,
+            'phylab': self.phylab,
             'nothing': self.nothing
         }
 
@@ -262,6 +264,16 @@ class WechatHandler(tornado.web.RequestHandler):
     #校车
     def schoolbus(self, user):
         msg = get.schoolbus(user)
+        self.write(self.wx.response_text_msg(msg))
+        self.finish()
+
+    def phylab(self, user):
+        msg = get.phylab(user)
+        self.write(self.wx.response_text_msg(msg))
+        self.finish()
+
+    def lecturenotice(self, user):
+        msg = get.lecturenotice(user)
         self.write(self.wx.response_text_msg(msg))
         self.finish()
 

@@ -74,7 +74,8 @@ class Message(object):
             'card':{'first':'', 'content': [u'一卡通',u'余额']},
             'nic':{'first':'', 'content': [u'流量',u'wed',u'Web',u'网络']},
             'gpa':{'first':'', 'content': [u'绩点', u'成绩', u'Gpa', u'gpa', u'GPA']},
-            'lecture':{'first':'', 'content': [u'人文讲座', u'讲座']},
+            'lecture':{'first':'讲座', 'content': [u'次数']},
+            'lecturenotice':{'first':'', 'content': [u'人文讲座', u'讲座']},
             'library':{'first':u'书', 'content': [u'借阅',u'查询']},
             'pe':{'first':'', 'content': [u'跑操']},
             'update-curriculum':{'first':'',u'更新':'', 'content': [u'课表']},
@@ -82,6 +83,7 @@ class Message(object):
             'update-srtp':{'first':u'更新', 'content': [u'srtp',u'Srtp',u'SRTP']},
             'jwc':{'first':'', 'content': [u'教务']},
             'schoolbus':{'first':'', 'content': [u'校车']},
+            'phylab':{'first':'', 'content': [u'物理',u'实验']},
             'quanyi':{'first':'', 'content': [u'权益']},
             }
 
