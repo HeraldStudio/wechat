@@ -69,19 +69,19 @@ def phylab(user):
         content = response['content']
         for labType in content:
             if content[labType]!='':
-                msg +=u'● %s:\n' %labType
+                msg +=u'%s:\n' %labType
                 for lab in content[labType]:
-                    msg +=u'%s\n' %lab['name']
+                    msg +=u'> %s\n' %lab['name']
                     msg +=u'%s   ' %lab['Teacher']
                     if not lab['Grade']:
                         msg +=u'%s\n' %lab['Address']
                         msg +=u'%s %s\n' %(lab['Date'],lab['Day'])
                     else:
                         msg +=u'成绩:%s\n' %lab['Grade']
-                msg +=u'\n\n'
+                msg +=u'\n'
         if not msg:
-            msg = u'没有物理实验哦'
-        return msg
+            return u'没有物理实验哦'
+        return msg[:-3]
     else:
         return response['content'] 
 
@@ -175,9 +175,9 @@ def lecturenotice(user):
     else:
         msg = u'人文讲座预告:\n'
         for lec in response['content']:
-            msg += u"%s(%s)\n"%(lec['topic'], lec['speaker'])
-            msg += u"%s %s\n"%(lec['date'], lec['location'])
-            msg += u"<a href='%s'>戳我查看详细信息</a>\n\n\n"%lec['detail']
+            msg += u"> %s\n> %s\n"%(lec['topic'], lec['speaker'])
+            msg += u"> %s\n> %s\n"%(lec['date'], lec['location'])
+            msg += u'<a href="%s#%s">戳我查看详细信息</a>\n\n'%(lec['detail'],lec['topic'])
         msg += u"查询讲座次数请在非调戏状态输入[讲座次数]"
         return msg
 

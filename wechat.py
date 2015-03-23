@@ -75,7 +75,7 @@ class Message(object):
             'nic':{'first':'', 'content': [u'流量',u'wed',u'Web',u'网络']},
             'gpa':{'first':'', 'content': [u'绩点', u'Gpa', u'gpa', u'GPA']},
             'grade':{'first':'', 'content': [u'成绩']},
-            'lecture':{'first':'讲座', 'content': [u'次数']},
+            'lecture':{'first':u'讲座', 'content': [u'次数']},
             'lecturenotice':{'first':'', 'content': [u'人文讲座', u'讲座']},
             'library':{'first':u'书', 'content': [u'借阅',u'查询']},
             'pe':{'first':'', 'content': [u'跑操']},
