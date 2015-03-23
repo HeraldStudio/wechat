@@ -151,6 +151,9 @@ def srtp(db, user):
     finally:
         return msg
 
+def grade(db, user):
+    return gpa(db, user) + '\n\n\n' + srtp(db, user)
+
 def lecture(user):
     response = get_api_return('lecture', user)
     if response['code'] == 200:

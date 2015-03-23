@@ -89,6 +89,7 @@ class WechatHandler(tornado.web.RequestHandler):
             'schoolbus': self.schoolbus,
             'quanyi': self.quanyi_info,
             'phylab': self.phylab,
+            'grade': self.grade,
             'nothing': self.nothing
         }
 
@@ -274,6 +275,11 @@ class WechatHandler(tornado.web.RequestHandler):
 
     def lecturenotice(self, user):
         msg = get.lecturenotice(user)
+        self.write(self.wx.response_text_msg(msg))
+        self.finish()
+
+    def grade(self, user):
+        msg = get.grade(self.db, user)
         self.write(self.wx.response_text_msg(msg))
         self.finish()
 

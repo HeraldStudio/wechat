@@ -20,12 +20,12 @@
                 },
                 {
                     "type": "click",
-                    "name": "GPA",
-                    "key": "gpa"
+                    "name": "成绩",
+                    "key": "grade"
                 },
                 {
                     "type": "click",
-                    "name": "SRTP",
+                    "name": "实验",
                     "key": "srtp"
                 }
             ]
@@ -41,7 +41,7 @@
                 {
                     "type": "click",
                     "name": "人文讲座",
-                    "key": "lecture"
+                    "key": "lecturenotice"
                 },
                 {
                     "type": "click",
