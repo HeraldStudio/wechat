@@ -82,8 +82,10 @@ def phylab(user):
         if not msg:
             return u'没有物理实验哦'
         return msg[:-3]
+    elif response['code'] == 599:
+        return u"正在获取最新数据，再点一次就有啦！"
     else:
-        return response['content'] 
+        return response['content']
 
 def rendered(user):
     response = get_api_return('library', user)
