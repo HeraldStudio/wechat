@@ -81,7 +81,7 @@ def phylab(user):
                 msg +=u'\n'
         if not msg:
             return u'没有物理实验哦'
-        return msg[:-3]
+        return msg[:-2]
     elif response['code'] == 599:
         return u"正在获取最新数据，再点一次就有啦！"
     else:
