@@ -108,6 +108,11 @@ class WechatHandler(tornado.web.RequestHandler):
     @tornado.web.asynchronous
     def post(self):
         self.wx = wechat.Message(token='bright')
+        s = self.wx.check_signature(self.get_argument('signature', default=''),
+                                   self.get_argument('timestamp', default=''),
+                                   self.get_argument('nonce', default=''))
+        with open("/var/tmp/t",'w+') as f:
+            f.write(s+'\n\n')
         if self.wx.check_signature(self.get_argument('signature', default=''),
                                    self.get_argument('timestamp', default=''),
                                    self.get_argument('nonce', default='')):
