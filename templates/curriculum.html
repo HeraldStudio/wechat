@@ -11,14 +11,14 @@
 		<div role="main" class="ui-content">
 			<center>
 			<div data-role="fieldcontain">
-				<form>
+				<center>
 					<fieldset data-role="controlgroup" data-type="horizontal" data-mini="true">
 						{% for key, value in daymap.items() %}
 						<input type="radio" name="day" id="{{key}}" {% if key == today %}checked="checked"{% end %}>
 						<label for="{{key}}">{{value}}</label>
 						{% end %}
 					</fieldset>
-				</form>
+				</center>
 
 				<ul id="curriculum" data-role="listview" data-inset="true">
 					{% for course in courses%}

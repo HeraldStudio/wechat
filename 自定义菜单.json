@@ -51,7 +51,7 @@
                 {
                     "type": "view",
                     "name": "空闲教室",
-                    "url": "http://herald.seu.edu.cn/queryEmptyClassrooms/m/"
+                    "url": "http://herald.seu.edu.cn/queryEmptyClassrooms/m/index.html"
                 },
                 {
                     "type": "click",
