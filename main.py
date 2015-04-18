@@ -19,6 +19,7 @@ from mod.units import quanyi
 from mod.models.user import User
 from mod.units.weekday import today, tomorrow
 from mod.units.config import LOCAL
+from mod.units.ticket_handler import ticket_handler
 import tornado.web
 import tornado.ioloop
 import tornado.httpserver
@@ -90,6 +91,7 @@ class WechatHandler(tornado.web.RequestHandler):
             'quanyi': self.quanyi_info,
             'phylab': self.phylab,
             'grade': self.grade,
+            'ticket': self.ticket,
             'nothing': self.nothing
         }
 
@@ -292,6 +294,11 @@ class WechatHandler(tornado.web.RequestHandler):
     def quanyi_info(self, user):
         msg = quanyi.quanyi(self.db, user)
         self.write(self.wx.response_text_msg(msg))
+        self.finish()
+
+    # ticket
+    def ticket(self, user):
+        self.write(ticket_handler(self.wx.ticket_type, user, self.db, self.wx))
         self.finish()
 
 
