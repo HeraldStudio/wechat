@@ -20,6 +20,7 @@ from mod.models.user import User
 from mod.units.weekday import today, tomorrow
 from mod.units.config import LOCAL
 from mod.units.ticket_handler import ticket_handler
+from mod.units.eat_handler import EatHandler
 import tornado.web
 import tornado.ioloop
 import tornado.httpserver
@@ -45,6 +46,7 @@ class Application(tornado.web.Application):
             (r'/wechat2/card/([\S]+)', CradHandler),
             (r'/wechat2/srtp/([\S]+)', SRTPHandler),
             (r'/wechat2/update/([\S]+)/([\S]+)', UpdateHandler),
+            (r'/wechat2/infor_send',EatHandler),
 
         ]
         settings = dict(
@@ -92,6 +94,8 @@ class WechatHandler(tornado.web.RequestHandler):
             'phylab': self.phylab,
             'grade': self.grade,
             'ticket': self.ticket,
+            'eat':self.eat,
+            'infor_send':self.infor_send,
             'nothing': self.nothing
         }
 
@@ -301,6 +305,16 @@ class WechatHandler(tornado.web.RequestHandler):
         self.write(ticket_handler(self.wx.ticket_type, user, self.db, self.wx))
         self.finish()
 
+    #东门小吃预报
+    def eat(self,user):
+        msg = get.eatHandler(self.db)
+        self.write(self.wx.response_text_msg(msg))
+        self.finish()
+    def infor_send(self,user):
+        self.write(self.wx.response_text_msg(
+                            u'<a href="%s/infor_send">点击进行信息发布</a>' % 
+                                LOCAL))
+        self.finish()
 
     # 其他
     def change_user(self, user):

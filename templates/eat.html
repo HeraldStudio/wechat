@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+    <head>
+       <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="stylesheet" href="{{static_url('css/jquery.mobile-1.4.2.css') }}">
+        <script type="text/javascript" src="{{static_url('js/jquery.min.js')}}"></script>
+        <script type="text/javascript" src="{{static_url('js/jquery.mobile-1.4.2.min.js') }}"></script> 
+        <title>信息发布</title>
+    </head>
+    <body>
+        <div data-role="page" id="main">
+            <div data-role="header">
+                <h1>信息发布</h1>
+            </div>
+            <div data-role="content" class="main_content" id="main_content" >
+                <div data-role="fieldcontain">
+                    <!-- <div data-role="controlgroup" > -->
+                    <input type="text" name="token" id="token" placeholder="token" value="">
+                   <!--   --></div>
+                    <label for="status" >选择信息</label>
+                        <select name="status" id="status">
+                          <option value="1">今晚会来</option>
+                          <option value="0">今晚不会来</option>
+                        </select>
+               
+                <div data-role="fieldcontain">
+                    <a data-role="button" data-transition="slide" id="bind_button" data-theme="b">提交</a>
+                </div>
+                <div data-role="footer" data-position="fixed" >
+              <h1>先声•东南大学</h1>
+              </div>
+            </div> 
+        </div>
+        </div>
+
+    <script>
+    $(document).ready(function(){
+        $('#bind_button').on('click',function(){
+            $.mobile.loading('show',{theme:"b",text:"正在操作...",textonly:true, textVisible: true});
+            setTimeout(function(){
+                $.ajax({
+                    url:'/wechat2/infor_send',
+                    type:'POST',
+                    data:{
+                        'token':$('#token').val(),
+                        'status':$('#status').val()
+                    },
+                    success:function(e){
+                        $.mobile.loading('hide');
+                        if(e=='success'){
+                            $('.main_content').html('<div style="margin-top:20%"><center>发布成功</center></div>');
+                        }
+                        else{
+                            alert(e);
+                        }
+                    },
+                    erroe:function(e){
+                        $.mobile.loading('hide');
+                            alert('发布失败,请检查网络');
+                    }
+                });
+            },50);
+            });
+        });
+    </script>
+    </body>
+</html>
