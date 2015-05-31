@@ -6,7 +6,7 @@ from sqlalchemy.sql import or_
 from ..models.course import Course
 from ..models.gpa import Overview as GPAO
 from ..models.srtp import Overview as SRTPO
-from ..models.eat import Eat
+# from ..models.eat import Eat
 from weekday import today, tomorrow, changedate, ismorning
 from config import LOCAL
 from get_api_return import get_api_return
@@ -267,18 +267,35 @@ def schoolbus(user):
         return response['content']
 
 
-def eatHandler(db):
-    msg = u''
-    hour = time.strftime('%H',time.localtime(time.time()))
-    day = time.strftime('%Y-%m-%d',time.localtime(time.time()))
-    today = time.strftime('%Y-%m-%d-%H',time.localtime(time.time()))
+# def eatHandler(db):
+#     msg = u''
+#     hour = time.strftime('%H',time.localtime(time.time()))
+#     day = time.strftime('%Y-%m-%d',time.localtime(time.time()))
+#     today = time.strftime('%Y-%m-%d-%H',time.localtime(time.time()))
+#     try:
+#         item = db.query(Eat).filter(Eat.day == day).one()
+#         if item.status == 1:
+#             msg +=u'据可靠情报，今晚会有美食哦~ --更新于%s时' % item.time
+#         else:
+#             msg +=u'据可靠情报，今晚他们不能来了T T --更新于%s时' % item.time
+#     except:
+#         msg +=u'暂时还没有信息哦~小猴正在积极联系他们'
+#     finally:
+#         return msg
+def dm(user,content):
+    url = u'http://123.57.143.92/'
+    client = HTTPClient()
+    nowtime = int(time.time())
+    data = {
+        'time':nowtime,
+        'content':content.strip().encode('utf-8'),
+        'movieid':'000000001',
+        'studentNum':user.cardnum
+    }
+    params = urllib.urlencode(data)
+    request = HTTPRequest(url, method='POST',
+                          body=params, request_timeout=4)
     try:
-        item = db.query(Eat).filter(Eat.day == day).one()
-        if item.status == 1:
-            msg +=u'据可靠情报，今晚会有美食哦~ --更新于%s时' % item.time
-        else:
-            msg +=u'据可靠情报，今晚他们不能来了T T --更新于%s时' % item.time
+        response = client.fetch(request)
     except:
-        msg +=u'暂时还没有信息哦~小猴正在积极联系他们'
-    finally:
-        return msg
+        pass

@@ -104,7 +104,6 @@ class Message(object):
             'schoolbus':{'first':'', 'content': [u'校车']},
             'phylab':{'first':'', 'content': [u'物理',u'实验']},
             'quanyi':{'first':'', 'content': [u'权益']},
-            'eat':{'first':'','content':[u'东门',u'小吃']},
             }
 
         ticket = [
@@ -114,10 +113,10 @@ class Message(object):
         if content in ticket:
             self.ticket_type = ticket.index(content) + 1
             return 'ticket'
-        if content==u'信息发布':
-            return 'infor_send'
         if content[0:2].lower() == u'ss':
             return 'searchlib'
+        if content[0:2].lower() == u'dm':
+            return 'dm'
 
         for func in key:
             try:
