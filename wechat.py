@@ -117,6 +117,8 @@ class Message(object):
             return 'searchlib'
         if content[0:2].lower() == u'dm':
             return 'dm'
+        if u'宿舍' in content:
+            return 'room'
 
         for func in key:
             try:

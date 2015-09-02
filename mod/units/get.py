@@ -88,6 +88,28 @@ def phylab(user):
     else:
         return response['content']
 
+def room(user):
+        response = get_api_return('room',user)
+        msg = u''
+        if response['code'] ==200:
+            content = response['content']
+            if u'园' in content['room']:
+                msg += content['room']
+                msg += content['bed']
+            else:
+                msg += u'宿舍信息可能还没公布~'
+                return msg
+            if not msg:
+                return u'暂且没有查到数据 T_T'
+            return msg
+        elif response['code'] == 599:
+            return u"正在获取最新数据，再发一次就有啦"
+        elif response['code'] == 408:
+            return u"正在获取最新数据，再发一次就有啦！"
+        else:
+            return response['content']
+    
+
 def rendered(user):
     response = get_api_return('library', user)
     msg = u''
@@ -255,7 +277,8 @@ def schoolbus(user):
             ret = response['content']['weekend']
         else:
             ret = response['content']['weekday']
-        msg = u'Tips:\n九 --- 九龙湖\n河 --- 进香河(四牌楼)\n桥 --- 丁家桥\n江 --- 龙江\n九龙湖乘车: 西门路口\n四牌楼乘车: 交院香园停车场\n'
+        msg = u'Tips:\n到地铁站时，乘车途中只上不下。到九龙湖时，乘车途中只下不上\n'
+        msg += u'出九龙湖路线：\n校内停车场-->材料学院、图书馆-->文学院-->西门\n-->橘园-->行政楼-->电工电子\n-->梅园-->教八-->北门-->地铁停靠站'
         msg += u'\n前往九龙湖:\n'
         for m in ret[u'进九龙湖']:
             msg += u'[%s] - %s\n' % ( m['time'], m['bus'] )
@@ -299,3 +322,5 @@ def dm(user,content):
         response = client.fetch(request)
     except:
         pass
+
+

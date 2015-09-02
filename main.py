@@ -93,6 +93,7 @@ class WechatHandler(tornado.web.RequestHandler):
             'grade': self.grade,
             'ticket': self.ticket,
             'dm':self.dm,
+            'room':self.room,
             'nothing': self.nothing
         }
 
@@ -301,12 +302,18 @@ class WechatHandler(tornado.web.RequestHandler):
     def ticket(self, user):
         self.write(ticket_handler(self.wx.ticket_type, user, self.db, self.wx))
         self.finish()
-
+    #  弹幕
     def dm(self,user):
         get.dm(user,self.wx.sub_content)
         msg = u'发送弹幕成功'
         self.write(self.wx.response_text_msg(msg))
         self.finish()
+    # 宿舍
+    def room(self,user):
+        msg = get.room(user)
+        self.write(self.wx.response_text_msg(msg))
+        self.finish()
+
     # 其他
     def change_user(self, user):
         msg = u'当前用户为：%s \n\n\n<a href="%s/register/%s">点击重新绑定</a>' % (
