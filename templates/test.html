@@ -1,0 +1,216 @@
+
+
+
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>预约</title>
+
+<link rel="stylesheet" type="text/css" href="http://yuyue.seu.edu.cn:80/eduplus//css/yuyue.css">
+
+<script type="text/javascript" src="http://yuyue.seu.edu.cn:80/eduplus//js/jquery.min.js"></script>
+<script type="text/javascript" src="http://yuyue.seu.edu.cn:80/eduplus//layer/layer.min.js"></script>
+<script>
+$(function(){
+    $("#phone").blur(function(){
+        var reg = /^1\d{10}$/;
+        var phone=$("#phone").val();
+            if(!reg.test(phone)){
+                $("#validatePhone").css("display","block");
+            }else{
+                $("#validatePhone").css("display","none");
+            }
+    });
+    
+})
+
+function removeUser(classFlag){
+    $("#"+classFlag).remove();
+}
+
+var isSubmit = false;
+
+function submit(){
+    if(!isSubmit){
+        isSubmit = true;
+        var reg = /^1\d{10}$/;
+        var phone=$("#phone").val();
+        var remark=$("#remark").val();
+        var validateCode=$("#validateCode").val();
+        var currentUser = $("#currentUser").val();
+        var itemId = $("#itemId").val();
+        var useTime = $("#useTime").val();
+        var allId = $("input[name='useUserIds']");
+        var ids = "";
+        if(!reg.test(phone)){
+            isSubmit = false;
+            layer.alert("手机号码格式不正确");
+        }else if(remark.length > 100){
+            isSubmit = false;
+            layer.alert("备注长度不能超过100");
+        }else if(validateCode == ""){
+            isSubmit = false;
+            layer.alert("请输入验证码！");
+        }else{
+            allId.each(function(){
+                ids += this.value + ",";
+            });
+            var allowHalf = $('input[name="orderVO.useMode"]:checked').val();
+            $.ajax({
+                type: "POST",
+                url: "order/judgeUseUser.do?sclId=1",
+                data: {ids:ids,useTime:useTime,itemId:itemId,allowHalf:allowHalf,validateCode:validateCode},
+                dataType:"json",
+                success: function(msg){
+                    if(msg.codeError != null){
+                        isSubmit = false;
+                        layer.alert(msg.codeError);
+                    }else if(msg.min != null){
+                        isSubmit = false;
+                        layer.alert(msg.min);
+                    }else if(msg.max != null){
+                        isSubmit = false;
+                        layer.alert(msg.max);
+                    }else if(msg.useuser){
+                        isSubmit = false;
+                         var json=eval(msg.useuser);
+                            var names = "";
+                         $.each(json,function(i,n){
+                              names += (n + " ");
+                               }); 
+                         layer.alert("以下人员不能参与本预约</br>"+names);
+                    }else{
+                        $.ajax({
+                            type: "POST",
+                            url: "order/insertOredr.do?sclId=1",
+                            data:$('#fm').serialize(),
+                            error: function(request) {
+                                layer.alert("Connection error");
+                            },
+                            success: function(data) {
+                                isSubmit = false;
+                                if(currentUser == "admin"){
+                                    window.parent.close();
+                                }else{
+                                    if(data == "success"){
+                                        window.parent.getOrderInfo(1);
+                                        window.parent.cloaLayer();
+                                    }else{
+                                         layer.alert("没有可用场地");
+                                    }
+                                }
+                            }
+                        });
+
+                    }
+                }
+            });
+        }
+        
+    }
+    
+}
+
+var index;
+
+function cloaLayer(){
+    layer.close(index);
+}
+
+function selectUser(){
+    var url = 'order/getContacts.do?sclId=1&flag=order';
+    index = $.layer({
+                   type:2,
+                   title:"添加人员",
+                   area: ['430px', '390px'],
+                   moveType: 1,
+                   border: [4, 0.6, '#666'],
+                   iframe:{
+                       src: url
+                   }
+            });
+}
+
+function changeMode(num){
+    if(2 == num){
+        $("#half").css("display","none");
+        $("#full").css("display","block");
+    }
+    if(1 == num){
+        $("#half").css("display","block");
+        $("#full").css("display","none");
+    }
+}
+</script>
+</head>
+<body>
+    <div class="appo-wrap">
+        <div class="appo-title">您正在对<strong>乒乓球</strong>进行预约</div>
+        <div class="appo-info">
+            <form id="fm" method="post">
+            <table border="0" cellspacing="0" cellpadding="0">
+                <tr class="use-time">
+                    <td class="appo-item">使用时间：</td>
+                    <td class="item-info" colspan="2">2015-09-26 09:00-10:00</td>
+                    <input type="hidden" name="orderVO.useTime" id="useTime" value='2015-09-26 09:00-10:00'/>
+                    <input type="hidden" id="itemId" name="orderVO.itemId" value='7'/>
+                </tr>
+                <tr class="use-type">
+                    <td class="appo-item">使用方式：</td>
+                    <td class="item-info" colspan="2">
+                    
+                        <input type="radio" name="orderVO.useMode" checked="checked" value="2"/>&nbsp;全场&nbsp;&nbsp;&nbsp;&nbsp;
+                    
+                    
+                    </td>
+                </tr>
+                <tr class="use-group">
+                    <td class="appo-item" valign="top"><span style="color: red;">*&nbsp;</span>邀请好友：</td>
+                    <td class="item-info" valign="top">
+                    <div class="user-list" id="user">
+                    </div>
+                    <a class="btn-yellow" id="handle-add"
+                     onclick="selectUser()">添加</a>
+                    </td>
+                    <td class="item-note" valign="top">
+                        <span id="half" style="display : none" class="warning">限-1--1人</span>
+                        <span id="full" class="warning">限1-3人</span>
+                    </td>
+                </tr>
+                <tr class="use-phone">
+                    <td class="appo-item"><span style="color: red;">*&nbsp;</span>手机号码：</td>
+                    <td class="item-info" colspan="2">
+                    <input type="text" id="phone" name="orderVO.phone" value='15651918580'/>
+                    <!-- <i>审核通过会给您短信通知</i> --> 
+                    </td>
+                </tr>
+                <tr class="use-note">
+                    <td class="appo-item" valign="top">备注：</td>
+                    <td class="item-info" colspan="2" valign="top">
+                    <textarea id="remark" placeholder="备注长度不能超过100字符..." name="orderVO.remark"></textarea>
+                    </td>
+                </tr>
+                <tr class="use-validate">
+                    <td class="appo-item" valign="top"><span style="color: red;">*&nbsp;</span>验证码：</td>
+                    <td class="item-info" colspan="2" valign="top">
+                        <input type="text" id="validateCode" name="validateCode"/>
+                        <img style="height: 24px;padding-left: 8px;" src="http://yuyue.seu.edu.cn:80/eduplus/control/validateimage">
+                    </td>
+                </tr>
+            </table>
+            </form>
+        </div>
+        <div class="warning appo-warning">提示：违约将被冻结3天，
+            提前2小时取消不算违约，
+            场地最多保留15分钟，携带一卡通刷卡入馆。</div>
+        <a class="do-submit" id="do-submit" onclick="submit()">立即预约</a>
+ 
+        <input type="hidden" id="currentUser" value="" />
+    </div>
+    
+</body>
+</html>

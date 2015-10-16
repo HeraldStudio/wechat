@@ -20,6 +20,7 @@ from mod.models.user import User
 from mod.units.weekday import today, tomorrow
 from mod.units.config import LOCAL
 from mod.units.ticket_handler import ticket_handler
+from mod.units.yuyue_handler import yuyueHandler
 import tornado.web
 import tornado.ioloop
 import tornado.httpserver
@@ -45,6 +46,7 @@ class Application(tornado.web.Application):
             (r'/wechat2/card/([\S]+)', CradHandler),
             (r'/wechat2/srtp/([\S]+)', SRTPHandler),
             (r'/wechat2/update/([\S]+)/([\S]+)', UpdateHandler),
+            (r'/wechat2/yuyue/([\S]+)',yuyueHandler),
 
         ]
         settings = dict(
@@ -94,6 +96,7 @@ class WechatHandler(tornado.web.RequestHandler):
             'ticket': self.ticket,
             'dm':self.dm,
             'room':self.room,
+            'yuyue':self.yuyue,
             'nothing': self.nothing
         }
 
@@ -122,6 +125,7 @@ class WechatHandler(tornado.web.RequestHandler):
                                    self.get_argument('nonce', default='')):
             self.wx.parse_msg(self.request.body)
             try:
+                typelog = "log"
                 if self.wx.msg_type == 'event' and self.wx.event == 'subscribe':
                     self.write(self.wx.response_text_msg('welcome'))
                     self.finish()
@@ -140,6 +144,7 @@ class WechatHandler(tornado.web.RequestHandler):
                         self.finish()
                 elif self.wx.msg_type == 'event':
                     try:
+                        typelog = self.wx.event_key
                         user = self.db.query(User).filter(
                             User.openid == self.wx.openid).one()
                         try:
@@ -313,6 +318,12 @@ class WechatHandler(tornado.web.RequestHandler):
         msg = get.room(user)
         self.write(self.wx.response_text_msg(msg))
         self.finish()
+
+    def yuyue(self,user):
+        msg = get.yuyue(user)
+        self.write(self.wx.response_text_msg(msg))
+        self.finish()
+
 
     # 其他
     def change_user(self, user):

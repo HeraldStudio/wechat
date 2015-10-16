@@ -8,7 +8,7 @@ from ..models.gpa import Overview as GPAO
 from ..models.srtp import Overview as SRTPO
 # from ..models.eat import Eat
 from weekday import today, tomorrow, changedate, ismorning
-from config import LOCAL
+from config import LOCAL,SERVICE,TIME_OUT
 from get_api_return import get_api_return
 import urllib
 import json
@@ -305,6 +305,13 @@ def schoolbus(user):
 #         msg +=u'暂时还没有信息哦~小猴正在积极联系他们'
 #     finally:
 #         return msg
+
+
+def yuyue(user):
+    msg = u'<a href="%s/yuyue/%S">点我进行预约</a>' %('http://herald.seu.edu.cn', user.openid)
+    return msg
+
+
 def dm(user,content):
     url = u'http://123.57.143.92/'
     client = HTTPClient()

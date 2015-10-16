@@ -85,7 +85,7 @@ class Message(object):
         content = self.msg.get('Content', None)
 
         key={
-            'help' : {'first':'', 'content': [u'怎么用' , u'说明']},
+            'help' : {'first':'', 'content': [u'怎么用' , u'怎么使用',u'说明']},
             'change-user': {'first':'', 'content': [u'改变用户',u'重新',u'绑定']},
             'srtp': {'first':'', 'content': [u'SRTP' ,u'Srtp', u'srtp']},
             'play':{'first':'', 'content': [u'调戏']},
@@ -104,6 +104,7 @@ class Message(object):
             'schoolbus':{'first':'', 'content': [u'校车']},
             'phylab':{'first':'', 'content': [u'物理',u'实验']},
             'quanyi':{'first':'', 'content': [u'权益']},
+            'yuyue':{'first':'','content':[u'预约']}
             }
 
         ticket = [
