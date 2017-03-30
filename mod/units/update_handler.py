@@ -89,7 +89,7 @@ class UpdateHandler(tornado.web.RequestHandler):
                 else:
                     self.write(TEMPLATE.format(content=response['content']))
             elif type == 'curriculum':
-                response = get_api_return('curriculum', user, timeout=30)
+                response = get_api_return('curriculum', user, {'term':'16-17-3'}, timeout=30)
                 if response['code'] == 200:
                     courses = db.query(Course).filter(Course.openid == user.openid).all()
                     curriculum = response['content']

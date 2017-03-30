@@ -2,12 +2,12 @@
 # @Date    : 2014-06-28 23:10:21
 # @Author  : xindervella@gamil.com yml_bright@163.com
 
-APPID = ''
-DEFAULT_UUID = ''
+APPID = '502e69b05a1bd63a326d8bd24b3ffe2e'
+DEFAULT_UUID = '0000000000000000000000000000000000000000'
 
-AUTH = 'http://121.248.63.105/uc/'
-SERVICE = 'http://121.248.63.105/api/'
-LOCAL = u'http://121.248.63.105/wechat2'
+AUTH = u'http://223.3.65.239/uc/'
+SERVICE = u'http://223.3.65.239/api/'
+LOCAL = u'http://115.28.27.150/wechat2'
 
 
 

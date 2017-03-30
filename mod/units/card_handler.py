@@ -21,7 +21,7 @@ class CradHandler(tornado.web.RequestHandler):
     def get (self,openid) :
         user = self.db.query(User).filter(User.openid == openid).one()
         
-        response=get_api_return('card',user,{'timedelta':8},17)
+        response=get_api_return('card',user,{'timedelta':1},17)
         
         if response['code'] == 200:
             detail=response['content']

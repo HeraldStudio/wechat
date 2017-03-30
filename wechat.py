@@ -80,13 +80,51 @@ class Message(object):
         except:
             return u''
 
-    @property
-    def content(self):
-        content = self.msg.get('Content', None)
+    def check_user(self,content):
+        key={
+            'help' : False,
+            'change-user': True,
+            'srtp': True,
+            'play':True,
+            'card':True,
+            'nic':True,
+            'gpa':True,
+            'grade':True,
+            'lecture':True,
+            'lecturenotice':True,
+            'library':True,
+            'searchlib':True,
+            'pe':True,
+            'tomorrow-curriculum':True,
+            'new-curriculum':True,
+            'update-curriculum':True,
+            'update-gpa':True,
+            'update-srtp':True,
+            'jwc':True,
+            'schoolbus':True,
+            'phylab':True,
+            'quanyi':False,
+            'yuyue':False,
+            'xiaoli':False,
+            'exam':True,
+            'feedback':True,
+            'tice':True,
+            'app':False,
+            'nothing':True,
+            'room':True,
+	    'schoolnum':True,
+            'dm':False,
+	    'newseu':False
+            }
+        try:
+            return key[content]
+        except KeyError:
+            return False
 
+    def content_key(self,content):
         key={
             'help' : {'first':'', 'content': [u'怎么用' , u'怎么使用',u'说明']},
-            'change-user': {'first':'', 'content': [u'改变用户',u'重新',u'绑定']},
+            'change-user': {'first':'', 'content': [u'改变用户',u'重新',u'绑定',u'用户']},
             'srtp': {'first':'', 'content': [u'SRTP' ,u'Srtp', u'srtp']},
             'play':{'first':'', 'content': [u'调戏']},
             'card':{'first':'', 'content': [u'一卡通',u'余额']},
@@ -97,20 +135,28 @@ class Message(object):
             'lecturenotice':{'first':u'讲座', 'content': [u'播报',u'列表', u'预告']},
             'library':{'first':u'书', 'content': [u'借阅',u'查询']},
             'pe':{'first':'', 'content': [u'跑操']},
-            'update-curriculum':{'first':'',u'更新':'', 'content': [u'课表']},
+            'new-curriculum':{'first':'',u'更新':'', 'content': [u'课表']},
             'update-gpa':{'first':u'更新', 'content': [u'Gpa',u'GPA',u'绩点']},
             'update-srtp':{'first':u'更新', 'content': [u'srtp',u'Srtp',u'SRTP']},
             'jwc':{'first':'', 'content': [u'教务']},
             'schoolbus':{'first':'', 'content': [u'校车']},
             'phylab':{'first':'', 'content': [u'物理',u'实验']},
             'quanyi':{'first':'', 'content': [u'权益']},
-            'yuyue':{'first':'','content':[u'预约']}
+            'yuyue':{'first':'','content':[u'预约']},
+	    'xiaoli':{'first':'','content':[u'校历']},
+	    'exam':{'first':'','content':[u'考试安排']},
+	    'feedback':{'first':'','content':[u'反馈']},
+	    'tice':{'first':'','content':[u'体测',u'体测成绩',u'体育成绩']},
+	    'app':{'first':'','content':['app','APP','App']},
+	    'newseu':{'first':'','content':[u'新生',u'指南']},
+	    'schoolnum':{'first':'','content':[u'学号']}
             }
 
         ticket = [
             u'抢票测试'
         ]
-
+        if not content:
+            return 'nothing'
         if content in ticket:
             self.ticket_type = ticket.index(content) + 1
             return 'ticket'
@@ -120,7 +166,6 @@ class Message(object):
             return 'dm'
         if u'宿舍' in content:
             return 'room'
-
         for func in key:
             try:
                 if key[func]['first'] in content:
@@ -132,6 +177,15 @@ class Message(object):
                         if k in content:
                               return func
         return 'nothing'
+
+    @property
+    def content(self):
+        content = self.msg.get('Content', None)
+        return content
+
+    @property
+    def voice_content(self):
+        return self.msg.get('Recognition',None)
 
     @property
     def openid(self):

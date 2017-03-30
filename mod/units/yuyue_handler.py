@@ -22,21 +22,21 @@ class yuyueHandler(tornado.web.RequestHandler):
         data = {'uuid':user.uuid}
         print user.uuid
         try:
-            # client = HTTPClient()
-            # request = HTTPRequest(
-            #     SERVICE+'yuyue',
-            #     method='POST',
-            #     body=urllib.urlencode(data),
-            #     request_timeout=8)
-            # response = client.fetch(request)
-            # print response.body
-            cookie = 'iPlanetDirectoryPro=AQIC5wM2LY4SfcyCBSsUYTXSZN9cSsO5Rcsnt6EAOv9pQoo%3D%40AAJTSQACMDI%3D%23'
-            # self.render('yuyue.html',cookie=response.body,openid=openid)
-            self.render('yuyue.html',cookie=cookie,openid=openid)
+            client = HTTPClient()
+            request = HTTPRequest(
+                SERVICE+'yuyue',
+                method='POST',
+                body=urllib.urlencode(data),
+                request_timeout=8)
+            response = client.fetch(request)
+            print response.body
+            # cookie = 'iPlanetDirectoryPro=AQIC5wM2LY4SfcyCBSsUYTXSZN9cSsO5Rcsnt6EAOv9pQoo%3D%40AAJTSQACMDI%3D%23'
+            self.render('yuyue.html',cookie=response.body,openid=openid)
+            # self.render('yuyue.html',cookie=cookie,openid=openid)
             # self.write(response.body)
         except HTTPError as e:
             code = e.code
-            # print code
+            print code
             self.write('密码错误T_T，请返回修改密码~')
             self.finish()
     def post(self,openid):

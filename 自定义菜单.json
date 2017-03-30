@@ -51,7 +51,7 @@
                 {
                     "type": "view",
                     "name": "空闲教室",
-                    "url": "http://herald.seu.edu.cn/queryEmptyClassrooms/m/index.html"
+                    "url": "http://www.heraldstudio.com/queryEmptyClassrooms/m"
                 },
                 {
                     "type": "click",
@@ -84,9 +84,9 @@
                     "key": "change-user"
                 },
                 {
-                    "type": "view",
+                    "type": "click",
                     "name": "使用说明",
-                    "url": "http://mp.weixin.qq.com/s?__biz=MjM5NDI3NDc2MQ==&mid=211217347&idx=1&sn=5821c986e24b4e6ce001396819927fdc#rd"
+                    "key": "help"
                 }
             ]
         }

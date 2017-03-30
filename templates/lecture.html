@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="stylesheet" href="{{ static_url('css/jquery.mobile-1.4.2.css') }}">
+        <title>讲座记录查询</title>
+    </head>
+    <body>
+    <div data-role="page" id="main_page">
+        <div data-role="header" style="background-color:rgb(56,126,245);color: white;">
+          <h1 style="font-weight: 500;">讲座记录查询</h1>
+        </div>
+        <div>
+            <div class="ui-field-contain" style="margin: 10px;">
+                <label for="fullname">查询日期:</label>
+                <input type="text" name="fullname" id="query" placeholder="输入格式为2016-03-01"> 
+                <button class="ui-btn ui-corner-all" style="margin-top: 20px;" id="query_button">查询</button>     
+            </div>
+        </div>
+            
+        <div id="result" style="margin:10px;">
+            <p>查询结果:</p>
+            <ul data-role="listview" id="result_content" style="margin:10px;">
+            </ul>
+        </div>
+        <div data-role="footer" data-position="fixed" >
+            <h1>小猴偷米</h1>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="{{ static_url('js/jquery.min.js') }}"></script>
+    <script type="text/javascript" src="{{ static_url('js/jquery.mobile-1.4.2.min.js') }}"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("#result").hide();
+            $("#query_button").click(function(event){
+                $.mobile.loading('show', {theme:"b", text:"正在查询...", textonly:true, textVisible: true});
+                var content = $("#query").val();
+                if(content.length==0){
+                    $.mobile.loading('hide');
+                    alert("请输入查询日期")
+                } else {
+                    jQuery.ajax({
+                        url: './lecturequery',
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            date: content
+                        },
+                        success:function(data,textStatus,xhr){
+                            $.mobile.loading('hide'); 
+                            var result = $("#result_content");
+                            result.empty();
+			    $("#result").show();
+                            if(data.code==200){
+                                if(data.content.length==0){
+                                    var html = "<li><p>没有查询结果<p><li>";
+                                    result.html(html);
+                                } else {
+                                    var html = "";
+                                    for (var i = 0; i < data.content.length; i++) {
+                                        html += "<li><p>"+data.content[i]['speaker']+"</p><p>"+data.content[i]['date']+"</p><p>"+data.content[i]['topic']+"</p></li><br/>";
+                                    }
+                                    result.html(html);
+                                }
+                            } else {
+                               $.mobile.loading('show', {theme:"b", text:data['content'], textonly:true, textVisible: true});
+                               setTimeout(function(){
+                                    $.mobile.loading('hide');
+                                },2000);
+                            }
+                        },
+                        error:function(){
+                            $.mobile.loading('hide');
+                             $.mobile.loading('show', {theme:"b", text:"网络错误", textonly:true, textVisible: true});
+                             setTimeout(function(){
+                                $.mobile.loading('hide');
+                            },2000);
+                        }
+                    })
+                }
+            })
+        });
+
+    </script>
+    </body>
+</html>
+

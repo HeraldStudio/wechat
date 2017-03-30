@@ -16,7 +16,7 @@ error_map = {
         400 : u'=。= 后台接口错误，请联系小猴君',         # params error
         401 : u'<a href="%s/register/%s">你不是把一卡通密码输错了吧，快点我修改。</a>',                     
                                                      # uuid error
-        500 : u'=。= 出了点故障，不如待会再试试吧',        # server error
+        500 : u'=。= 学校服务器出了点故障，不如待会再试试吧',        # server error
     }
 
 def get_api_return(api_name, user, data={}, timeout=TIME_OUT):
@@ -41,9 +41,9 @@ def get_api_return(api_name, user, data={}, timeout=TIME_OUT):
             ret['content'] = error_map[401] % (LOCAL, user.openid)
         else:
             ret['content'] = error_map[ret['code']]
-    except:
+    except Exception,e:
         with open('api_error.log','a+') as f:
-            f.write(strftime('%Y%m%d %H:%M:%S in [get_api_return]', localtime(time()))+'\n'+str(sys.exc_info())+'\n['+api_name+']\t'+str(user.cardnum)+'\nString:'+str(ret)+'\n\n')
+            f.write(strftime('%Y%m%d %H:%M:%S in [get_api_return]', localtime(time()))+'\n'+str(e)+'\n['+api_name+']\t'+str(user.cardnum)+'\nString:'+str(ret)+'\n\n')
         ret['code'] = 500
         ret['content'] = u'=。= 服务器未能及时回应请求，不如再试试'
     return ret
