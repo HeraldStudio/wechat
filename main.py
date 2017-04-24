@@ -107,6 +107,7 @@ class WechatHandler(tornado.web.RequestHandler):
             'tice':self.tice,
             'app':self.app,
 	    'newseu':self.newseu,
+			'xinli':self.xinli,
             'nothing': self.nothing
         }
 
@@ -381,6 +382,10 @@ class WechatHandler(tornado.web.RequestHandler):
         self.finish()
     def tice(self,user):
         msg = get.tice(user)
+        self.write(self.wx.response_text_msg(msg))
+        self.finish()
+    def xinli(self,user):
+        msg = u'<a href="http://www.mikecrm.com/lduJMn">点我预约心理健康中心！</a>'
         self.write(self.wx.response_text_msg(msg))
         self.finish()
 

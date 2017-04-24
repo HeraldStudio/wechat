@@ -110,6 +110,7 @@ class Message(object):
             'feedback':True,
             'tice':True,
             'app':False,
+            'xinli':False,
             'nothing':True,
             'room':True,
 	    'schoolnum':True,
@@ -149,6 +150,7 @@ class Message(object):
 	    'tice':{'first':'','content':[u'体测',u'体测成绩',u'体育成绩']},
 	    'app':{'first':'','content':['app','APP','App']},
 	    'newseu':{'first':'','content':[u'新生',u'指南']},
+	    'xinli':{'first':'','content':['心理健康中心','绝望','心理健康中心预约']},
 	    'schoolnum':{'first':'','content':[u'学号']}
             }
 
