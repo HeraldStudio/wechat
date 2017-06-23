@@ -1,5 +1,6 @@
 
 mod/models/db.py
+menu/config.py
 
 *.py[cod]
 

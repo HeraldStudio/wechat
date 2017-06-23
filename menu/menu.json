@@ -1,0 +1,92 @@
+[
+  {
+    "name": "课内服务",
+    "sub_button": [
+      {
+        "type": "click",
+        "name": "课表",
+        "key": "new-curriculum"
+      },
+      {
+        "type": "click",
+        "name": "实验",
+        "key": "phylab"
+      },
+      {
+        "type": "click",
+        "name": "考试",
+        "key": "exam"
+      },
+      {
+        "type": "click",
+        "name": "成绩",
+        "key": "grade"
+      },
+      {
+        "type": "click",
+        "name": "图书馆",
+        "key": "library"
+      }
+    ]
+  },
+  {
+    "name": "课外生活",
+    "sub_button": [
+      {
+        "type": "click",
+        "name": "一卡通",
+        "key": "card"
+      },
+      {
+        "type": "click",
+        "name": "跑操",
+        "key": "pe"
+      },
+      {
+        "type": "click",
+        "name": "讲座信息",
+        "key": "lecturenotice"
+      },
+      {
+        "type": "view",
+        "name": "空闲教室",
+        "url": "http://www.heraldstudio.com/queryEmptyClassrooms/m"
+      },
+      {
+        "type": "click",
+        "name": "场馆预约",
+        "key": "yuyue"
+      }
+    ]
+  },
+  {
+    "name": "校园周边",
+    "sub_button": [
+      {
+        "type": "click",
+        "name": "权益服务",
+        "key": "quanyi"
+      },
+      {
+        "type": "click",
+        "name": "校车时刻",
+        "key": "schoolbus"
+      },
+      {
+        "type": "click",
+        "name": "教务通知",
+        "key": "jwc"
+      },
+      {
+        "type": "click",
+        "name": "切换用户",
+        "key": "change-user"
+      },
+      {
+        "type": "click",
+        "name": "使用说明",
+        "key": "help"
+      }
+    ]
+  }
+]
