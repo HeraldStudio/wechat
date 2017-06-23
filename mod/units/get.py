@@ -107,6 +107,7 @@ def exam(user):
             msg += u'%s    %s分钟\n' % (item['teacher'],item['hour'])
             msg += u'%s\n' % item['location']
             msg += u'%s\n' % item['time']
+            msg += u'\n'
         if not msg:
             msg = u'没有查询到考试安排哦'
         return msg
