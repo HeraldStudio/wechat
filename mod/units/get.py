@@ -82,14 +82,14 @@ def phylab(user):
             if content[labType]!='':
                 msg +=u'%s:\n' %labType
                 for lab in content[labType]:
-                    msg +=u'> %s\n' %lab['name']
+                    msg +=u'%s\n' %lab['name']
                     msg +=u'%s   ' %lab['Teacher']
                     if not lab['Grade']:
                         msg +=u'%s\n' %lab['Address']
                         msg +=u'%s %s\n' %(lab['Date'],lab['Day'])
                     else:
                         msg +=u'成绩:%s\n' %lab['Grade']
-                msg +=u'\n'
+                msg +=u'\n\n'
         if not msg:
             return u'没有物理实验哦'
         return msg[:-2]
