@@ -36,6 +36,18 @@ class Message(object):
 </xml> 
 """
 
+  PICTURE_MSG = u"""
+<xml>
+<ToUserName><![CDATA[toUser]]></ToUserName>
+<FromUserName><![CDATA[fromUser]]></FromUserName>
+<CreateTime>12345678</CreateTime>
+<MsgType><![CDATA[image]]></MsgType>
+<Image>
+<MediaId><![CDATA[media_id]]></MediaId>
+</Image>
+</xml>
+"""
+
     def __init__(self, token):
         self.token = token
         self.msg = {}
@@ -115,7 +127,8 @@ class Message(object):
             'room':True,
 	    'schoolnum':True,
             'dm':False,
-	    'newseu':False
+	    'newseu':False,
+            'unicom':Flase
             }
         try:
             return key[content]
@@ -152,6 +165,7 @@ class Message(object):
 	    'newseu':{'first':'','content':[u'新生',u'指南']},
 	    'xinli':{'first':'','content':['心理健康中心','绝望','心理健康中心预约']},
 	    'schoolnum':{'first':'','content':[u'学号']}
+	    'unicom':{'first':'','content':{u'校园卡','办卡'}}
             }
 
         ticket = [
@@ -207,3 +221,8 @@ class Message(object):
                                     description=content,
                                     picurl=pic_url,
                                     url=url)
+    def response_picture_msg(self, mediaId):
+        return self.PICTURE_MSG.format(to_user_name=self.msg['FromUserName'],
+                                    from_user_name=self.msg['ToUserName'],
+                                    create_time=str(int(time.time())),
+                                    MediaId=mediaId)

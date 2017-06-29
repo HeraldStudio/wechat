@@ -1,5 +1,5 @@
-t@github.com:HeraldStudio/wechat.git
-n": [
+{
+    "button": [
             {
                 "name": "课内服务", 
                 "sub_button": [
@@ -74,9 +74,9 @@ n": [
                 "name": "校园周边", 
                 "sub_button": [
                     {
-                        "type": "click", 
-                        "name": "权益服务", 
-                        "key": "quanyi", 
+                        "type": "media_id", 
+                        "name": "腾讯校园卡申领", 
+                        "media_id": "ZPIovg0k7WxOeY7FGAPzDJPXRfM18jIvVFqIwnG3eJuENSXC0B2oUmcjVPCcrB5B", 
                         "sub_button": [ ]
                     }, 
                     {
