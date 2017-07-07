@@ -3,6 +3,7 @@ mod/models/db.py
 menu/config.py
 
 *.py[cod]
+*.swp
 
 # C extensions
 *.so

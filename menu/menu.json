@@ -63,9 +63,9 @@
     "name": "校园周边",
     "sub_button": [
       {
-        "type": "click",
-        "name": "权益服务",
-        "key": "quanyi"
+        "type": "view",
+        "name": "腾讯校园卡申领",
+        "url": "http://xyk.js165.com:8000/wapycfd/seu/login"
       },
       {
         "type": "click",

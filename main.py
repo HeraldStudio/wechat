@@ -99,16 +99,17 @@ class WechatHandler(tornado.web.RequestHandler):
             'grade': self.grade,
             'dm':self.dm,
             'room':self.room,
-	    'schoolnum':self.schoolnum,
+	    	'schoolnum':self.schoolnum,
             'yuyue':self.yuyue,
             'xiaoli':self.xiaoli,
             'exam':self.exam,
             'feedback':self.feedback,
             'tice':self.tice,
             'app':self.app,
-	    'newseu':self.newseu,
+	    	'newseu':self.newseu,
 			'xinli':self.xinli,
-            'nothing': self.nothing
+            'nothing': self.nothing,
+			'bonus':self.bonus
         }
 
     def on_finish(self):
@@ -386,6 +387,11 @@ class WechatHandler(tornado.web.RequestHandler):
         self.finish()
     def xinli(self,user):
         msg = u'<a href="http://www.mikecrm.com/lduJMn">点我预约心理健康中心！</a>'
+        self.write(self.wx.response_text_msg(msg))
+        self.finish()
+
+    def bonus(self,user):
+        msg = u'居然在小猴上查我的名字，看来是真爱哦！'
         self.write(self.wx.response_text_msg(msg))
         self.finish()
 

@@ -14,7 +14,7 @@ import json
 
 
 def curriculum(db, user):
-    response = get_api_return('curriculum', user, {'term':'16-17-2'})
+    response = get_api_return('curriculum', user)
     if response['code'] == 200:
         courses = db.query(Course).filter(Course.openid == user.openid).all()
         curriculum = response['content']

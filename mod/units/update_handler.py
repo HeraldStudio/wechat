@@ -89,7 +89,7 @@ class UpdateHandler(tornado.web.RequestHandler):
                 else:
                     self.write(TEMPLATE.format(content=response['content']))
             elif type == 'curriculum':
-                response = get_api_return('curriculum', user, {'term':'16-17-3'}, timeout=30)
+                response = get_api_return('curriculum', user, timeout=30)
                 if response['code'] == 200:
                     courses = db.query(Course).filter(Course.openid == user.openid).all()
                     curriculum = response['content']
@@ -104,7 +104,8 @@ class UpdateHandler(tornado.web.RequestHandler):
                                           day=day))
                     try:
                         db.commit()
-                        self.write(TEMPLATE.format(content=u'更新好啦'))
+                        mycontent = response['content']
+                        self.write(TEMPLATE.format(content=mycontent))#u'更新好啦'))
                     except:
                         db.rollback()
                         self.write(TEMPLATE.format(content=u'T T 出了点小问题'))

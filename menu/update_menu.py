@@ -40,11 +40,11 @@ if __name__ == '__main__':
             print('获取 Token 失败')
 
 
-        request = requests.get('https://api.weixin.qq.com/cgi-bin/menu/get?access_token=' + token)
-        menu = json.loads(request.content)['menu']['button']
-        print(u'当前的菜单为: ')
-        print_menu(menu)
-
+#        request = requests.get('https://api.weixin.qq.com/cgi-bin/menu/get?access_token=' + token)
+#        menu = json.loads(request.content)['menu']['button']
+#        print(u'当前的菜单为: ')
+#        print_menu(menu)
+        print("ok")
         menu = json.loads(os.popen('cat menu.json').read(), encoding='utf-8')
         print(u'要改为的菜单为: ')
         print_menu(menu)

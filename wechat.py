@@ -115,7 +115,8 @@ class Message(object):
             'room':True,
 	    'schoolnum':True,
             'dm':False,
-	    'newseu':False
+	    'newseu':False,
+			'bonus':False
             }
         try:
             return key[content]
@@ -151,7 +152,8 @@ class Message(object):
 	    'app':{'first':'','content':['app','APP','App']},
 	    'newseu':{'first':'','content':[u'新生',u'指南']},
 	    'xinli':{'first':'','content':['心理健康中心','绝望','心理健康中心预约']},
-	    'schoolnum':{'first':'','content':[u'学号']}
+	    'schoolnum':{'first':'','content':[u'学号']},
+		'bonus':{'first':'','content':['梁界','祁辉','冯裕浩','于海通']}
             }
 
         ticket = [
