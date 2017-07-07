@@ -109,7 +109,8 @@ class WechatHandler(tornado.web.RequestHandler):
 	    	'newseu':self.newseu,
 			'xinli':self.xinli,
             'nothing': self.nothing,
-			'bonus':self.bonus
+            'bonus':self.bonus
+            'unicom':self.unicom,
         }
 
     def on_finish(self):
@@ -314,7 +315,7 @@ class WechatHandler(tornado.web.RequestHandler):
     #教务处
     def jwc(self, user):
         #msg = u'正在维护'
-	msg = get.jwc(user)
+        msg = get.jwc(user)
         self.write(self.wx.response_text_msg(msg))
         self.finish()
 
@@ -399,6 +400,12 @@ class WechatHandler(tornado.web.RequestHandler):
         msg = u'<a href="http://app.heraldstudio.com">点我下载app哦~</a>'
         self.write(self.wx.response_text_msg(msg))
         self.finish()
+
+    def unicom(self):
+        mediaId = 'ZPIovg0k7WxOeY7FGAPzDJPXRfM18jIvVFqIwnG3eJuENSXC0B2oUmcjVPCcrB5B' #from wechat upload interface
+        self.write(self.wx.response_picture_msg(mediaId))
+        self.finish()
+
     # 其他
     def change_user(self, user):
         msg = u'当前用户为：%s \n\n\n<a href="%s/register/%s">点击重新绑定</a>' % (
@@ -410,7 +417,7 @@ class WechatHandler(tornado.web.RequestHandler):
     def help(self, user):
         msg = u'<a href="http://mp.weixin.qq.com/s?__biz=MjM5NDI3NDc2MQ==&mid=211217347&idx=1&sn=5821c986e24b4e6ce001396819927fdc#rd">点我查看使用说明 </a>'
         msg += u'\n<a href="http://url.cn/41x4fjh">常见问题</a>'
-	self.write(self.wx.response_text_msg(msg))
+        self.write(self.wx.response_text_msg(msg))
         self.finish()
     def newseu(self,user):
         msg = u'<a href="http://mp.weixin.qq.com/s?__biz=MjM5NDI3NDc2MQ==&mid=2651223258&idx=2&sn=4355e2e37fcf19374ded26fb1fc4d88b#rd">【新生tips】住</a>'
