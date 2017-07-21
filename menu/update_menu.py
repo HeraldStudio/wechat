@@ -6,6 +6,16 @@ from config import appid, appsecret
 import requests
 
 
+def print_btn(btn):
+    result = ''
+    if 'name' in btn:
+        result += btn['name'].encode('utf-8')
+    if 'key' in btn:
+        result += '(' + btn['key'].encode('utf-8') + ')'
+    if 'url' in btn:
+        result += '((url))'
+    return result
+
 def print_menu(menu_json):
     maxcount = reduce(lambda x, y: max(x, y), map(lambda x: len(x['sub_button']), menu_json))
     print('')
@@ -14,12 +24,12 @@ def print_menu(menu_json):
         for col in range(0, len(menu_json)):
             btns = menu_json[col]['sub_button']
             i = line - maxcount + len(btns)
-            linestr += ' {0:12} \t'.format(btns[i]['name'].encode('utf-8') if i >= 0 else '')
+            linestr += ' {0:26} '.format(print_btn(btns[i]) if i >= 0 else '')
         print(linestr)
 
     linestr = ''
     for col in range(0, len(menu_json)):
-        linestr += '[{0:12}]\t'.format(menu_json[col]['name'].encode('utf-8'))
+        linestr += '[{0:26}]'.format(menu_json[col]['name'].encode('utf-8'))
     print(linestr)
     print('')
 
@@ -33,18 +43,19 @@ if __name__ == '__main__':
                                '&secret=' + appsecret)
         token = json.loads(request.content)
         if 'access_token' in token:
-            token = token['access_token']
+            token = str(token['access_token'])
             print(token + '\n')
 
         else:
             print('获取 Token 失败')
 
 
-#        request = requests.get('https://api.weixin.qq.com/cgi-bin/menu/get?access_token=' + token)
-#        menu = json.loads(request.content)['menu']['button']
-#        print(u'当前的菜单为: ')
-#        print_menu(menu)
-        print("ok")
+        request = requests.get('https://api.weixin.qq.com/cgi-bin/menu/get?access_token=' + token)
+        menu = json.loads(request.content)['menu']['button']
+        print(json.dumps(menu, ensure_ascii=False))
+        print('')
+        print(u'当前的菜单为: ')
+        print_menu(menu)
         menu = json.loads(os.popen('cat menu.json').read(), encoding='utf-8')
         print(u'要改为的菜单为: ')
         print_menu(menu)

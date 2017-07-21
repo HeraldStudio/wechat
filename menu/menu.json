@@ -44,7 +44,7 @@
       },
       {
         "type": "click",
-        "name": "讲座信息",
+        "name": "人文讲座",
         "key": "lecturenotice"
       },
       {
@@ -60,7 +60,7 @@
     ]
   },
   {
-    "name": "校园周边",
+    "name": "新生频道",
     "sub_button": [
       {
         "type": "view",
