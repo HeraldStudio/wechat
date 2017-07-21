@@ -42,3 +42,6 @@ nosetests.xml
 
 # IDEA
 *.idea
+
+# macOS
+.DS_Store
